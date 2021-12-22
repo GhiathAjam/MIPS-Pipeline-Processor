@@ -1,0 +1,21 @@
+
+ghaiath:
+1- assembler
+2 - Edu
+3 - memory stage
+4 - mem/wb buffer
+
+Nossir:
+1 - execution stage
+2 - execution/memory buffer
+
+
+sayed:
+1 - decode stage
+2 - decode/execute buffer
+3 - control unit one operand only
+
+shabrawy: 
+1 - fetch stage
+2 - fetch/decode buffer
+  
