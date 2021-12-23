@@ -14,7 +14,7 @@ end entity;
 architecture arc_reg_N of reg_N
 is
 begin
-  process (clk,rst)
+  process (clk, rst)
   begin
     if rst = '1' then
       q <= (others=>'0');

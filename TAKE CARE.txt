@@ -1,0 +1,11 @@
+is restore flags then jump handled?
+
+is modify then store handled?
+
+control hazards? 
+-FLUSH THEN FREEZE UNTIL READY
+-EDU can modify sendPC_mem
+
+-EDU can modify mem_oper (reset, int...)
+
+writing to flags register?

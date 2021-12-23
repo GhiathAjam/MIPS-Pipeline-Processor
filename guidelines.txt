@@ -4,4 +4,4 @@ alu operations: [ DONT FORGET FLAGS ]
 010- pass second operand
 011- sub
 100- add
-111- and
+101- and
