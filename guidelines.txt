@@ -1,0 +1,7 @@
+alu operations: [ DONT FORGET FLAGS ]
+000- not
+001- pass first operand
+010- pass second operand
+011- sub
+100- add
+111- and
