@@ -20,8 +20,10 @@ entity control_unit is port(
   mem_input_mux, mem_address_mux,
   mem_read_16, stk_read_16, mem_write_16, stk_write_16,
   mem_read_32, stk_read_32, mem_write_32, stk_write_32,
-  port_read, port_write:  in  std_logic;
+  port_read, port_write:  in  std_logic);
 ---
+
+end entity;
 
   
 

@@ -1,5 +1,4 @@
-
-ghaiath:
+Gheiath:
 1- assembler
 2 - Edu
 3 - memory stage
