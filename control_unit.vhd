@@ -26,8 +26,9 @@ entity control_unit is port(
 
 end entity;
 
-  
+architecture arc_control_unit of control_unit is
 
-  
-  
+register 
+begin
+
 
