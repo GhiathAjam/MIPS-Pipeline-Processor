@@ -1,7 +1,18 @@
 alu operations: [ DONT FORGET FLAGS ]
-000- not
+000- not FIRST OPERAND
 001- pass first operand
 010- pass second operand
 011- sub
 100- add
 101- and
+110- increment first operand
+
+- INT idx
+ 1- idx is passed as immediate
+ 2- alu passes imm as alu res
+ 3- EDU knows it is interrupt from mem-address mux
+ 4- EDU enters a procedure of multiple cycles:
+  4.0- EDU signals storing next PC to the stack
+  4.1- EDU passes 6 to mem address to get address of IVT
+  4.2- EDU passes IVT address again to memory after adding alu res to it
+  4.3- mem res is sent to pc
