@@ -16,3 +16,9 @@ alu operations: [ DONT FORGET FLAGS ]
   4.1- EDU passes 6 to mem address to get address of IVT
   4.2- EDU passes IVT address again to memory after adding alu res to it
   4.3- mem res is sent to pc
+
+- MEMORY notes:
+ - writing to memory, stack or port is done with falling edge
+
+- BUFFERS notes:
+  - writing is done with falling edge

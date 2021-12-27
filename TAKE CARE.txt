@@ -9,3 +9,8 @@ control hazards?
 -EDU can modify mem_oper (reset, int...)
 
 writing to flags register?
+
+STACK:
+- assumed stack and data memory same place
+- will use only first 16-bits 
+- still check for invalid addresses when > 2^20-1 ??
