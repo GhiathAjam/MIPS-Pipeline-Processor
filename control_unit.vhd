@@ -43,7 +43,9 @@ entity control_unit is port(
 ---
 
 end entity;
-
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
 architecture arc_control_unit of control_unit is
 
 -- flgs[0] -> Zero, [1] -> Neg, [2] -> Carry
@@ -81,8 +83,9 @@ begin
   process(rst, clk)
   begin
     if rst='1'  then
-      out_vec  <= (others => '0');
- 
+      -- Sel PC from mem
+      out_vec  <= "100000000000000000000000000000";
+      
     elsif rising_edge(clk) then
       if unsigned(sendPC_exI)=4 then
         -- TODO: unfreeze + sel PC [already selected, just unfreeze]
