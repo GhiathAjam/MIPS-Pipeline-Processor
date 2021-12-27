@@ -84,7 +84,7 @@ begin
   begin
     if rst='1'  then
       -- Sel PC from mem
-      out_vec  <= "100000000000000000000000000000";
+      out_vec  <= "000000000000000100000000000000";
       
     elsif rising_edge(clk) then
       if unsigned(sendPC_exI)=4 then
