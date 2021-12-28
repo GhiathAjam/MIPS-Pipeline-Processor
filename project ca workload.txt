@@ -1,8 +1,9 @@
 Gheiath:
-1- assembler
-2 - Edu
-3 - memory stage
-4 - mem/wb buffer
+1- Control Unit
+2- assembler
+3- EIU -- Exception Interrupt Unit
+3- memory stage 
+4- mem/wb buffer
 
 Nossir:
 1 - execution stage
@@ -12,7 +13,6 @@ Nossir:
 sayed:
 1 - decode stage
 2 - decode/execute buffer
-3 - control unit one operand only
 
 shabrawy: 
 1 - fetch stage
