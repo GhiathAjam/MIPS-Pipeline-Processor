@@ -56,7 +56,7 @@ signal mem_to_SP, SP_to_mem, mem_res:  std_logic_vector(31 downto 0);
 -- 65535 +1 --> to always be able to get 32 bits
 type ram_type is array(0 TO 65535 + 1) of std_logic_vector(15 downto 0);
 signal mem_arr:     ram_type;
-
+
 begin
 
   SP: entity work.reg_N  generic map (32) port map (clk, rst, mem_to_SP, SP_to_mem);
