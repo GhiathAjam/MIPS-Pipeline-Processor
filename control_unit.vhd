@@ -53,7 +53,7 @@ signal ctrl_to_flags, flags_to_ctrl:      std_logic_vector(2 downto 0);
 signal ctrl_to_flags_b, flags_b_to_ctrl:  std_logic_vector(2 downto 0);
 
 constant SIGNALS_BITS:  integer := 30;
-signal out_vec:		std_logic_vector(SIGNALS_BITS-1 downto 0);
+signal out_vec:		std_logic_vector(0 to SIGNALS_BITS-1);
 
 begin
   -- 1 bit
@@ -66,15 +66,15 @@ begin
   reg_write_back,
   mem_input_mux_sel,
   alu_mux_sel,
-  port_read, port_write) <= out_vec(14 downto 0);
+  port_read, port_write) <= out_vec(0 to 14);
   -- 2 bits
-  PC_mux_sel             <= out_vec(16 downto 15);
-  write_back_mux_sel     <= out_vec(18 downto 17);
-  mem_address_mux_sel    <= out_vec(20 downto 19);
+  PC_mux_sel             <= out_vec(15 to 16);
+  write_back_mux_sel     <= out_vec(17 to 18);
+  mem_address_mux_sel    <= out_vec(19 to 20);
   -- 3 bits
-  sendPC_exO             <= out_vec(23 downto 21);
-  alu_oper               <= out_vec(26 downto 24);
-  mem_oper               <= out_vec(29 downto 27);
+  sendPC_exO             <= out_vec(21 to 23);
+  alu_oper               <= out_vec(24 to 26);
+  mem_oper               <= out_vec(27 to 29);
  
   -- flags[0] -> Zero, [1] -> Neg, [2] -> Carr
   flags_reg:  entity work.reg_N  generic map (3) port map (clk, rst, ctrl_to_flags, flags_to_ctrl);
