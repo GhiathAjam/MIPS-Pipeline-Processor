@@ -1,0 +1,21 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.numeric_std.ALL;
+
+ENTITY mux2x1 IS
+  PORT (
+    A, B : IN STD_LOGIC_VECTOR (1 DOWNTO 0);
+    S : IN STD_LOGIC;
+    F : OUT STD_LOGIC_VECTOR (1 DOWNTO 0));
+END;
+ARCHITECTURE mux2x1_a OF mux2x1 IS
+BEGIN
+  PROCESS (A, B, S)
+  BEGIN
+    IF (S = '0') THEN
+      F <= A;
+    ELSE
+      F <= B;
+    END IF;
+  END PROCESS;
+END;
