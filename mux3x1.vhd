@@ -11,9 +11,9 @@ ENTITY mux3x1 IS
 END;
 ARCHITECTURE mux3x1_a OF mux3x1 IS
 BEGIN
-  PROCESS (adder_res, alu_res, mem_res, sel)
+  PROCESS (adder_res, alu_res, mem_res, sel, hlt)
   BEGIN
-    IF (hlt = '0') THEN
+    IF (hlt /='1') THEN -- hlt = '0', 'x', 'l', 'h', ...
       CASE sel IS
         WHEN "00" => new_pc <= adder_res;
         WHEN "01" => new_pc <= alu_res;
