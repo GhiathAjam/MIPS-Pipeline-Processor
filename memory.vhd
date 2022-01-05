@@ -29,13 +29,14 @@ entity memory is port(
 
 --- 
 -- outputs
-  sendPC_memO,
-  flags_bakO, flags_restoreO:  out std_logic;
+  sendPC_memO: out std_logic;
 
   -- write back data
   wb_data,
   -- port output
-  port_outp:  out std_logic_vector(15 downto 0) );
+  port_outp:  out std_logic_vector(15 downto 0);
+  -- mem res to PC 
+  mem_res32:  out std_logic_vector(31 downto 0) );
 ---
 
 end entity;
@@ -49,12 +50,12 @@ signal mem_operO: std_logic_vector(2 downto 0);
 -- mem address from EIU
 signal mem_address, 
 -- alias to port_outp
-prt_outp: std_logic_vector(15 downto 0);
+prt_outp, mem_res: std_logic_vector(15 downto 0);
 
-signal mem_to_SP, SP_to_mem, mem_res:  std_logic_vector(31 downto 0);
+signal mem_to_SP, SP_to_mem :  std_logic_vector(31 downto 0);
 
--- 65535 +1 --> to always be able to get 32 bits
-type ram_type is array(0 TO 65535 + 1) of std_logic_vector(15 downto 0);
+-- 2^20 --> to always be able to get 32 bits
+type ram_type is array(0 TO 1048576) of std_logic_vector(15 downto 0);
 signal mem_arr:     ram_type;
 
 begin
@@ -84,7 +85,8 @@ begin
     port_write=>port_write);
 
   port_outp <= prt_outp;
-  mem_res <= mem_arr(to_integer(unsigned(mem_address))) & mem_arr(to_integer(unsigned(mem_address))+1);
+  mem_res <= mem_arr(to_integer(unsigned(mem_address)));
+  mem_res32 <= mem_arr(to_integer(unsigned(mem_address))) & mem_arr(to_integer(unsigned(mem_address))+1);
 
   process(clk) 
     begin
@@ -93,11 +95,12 @@ begin
       end if;
   end process;
 
+
   -- write back data
   with write_back_mux_sel select
     wb_data <=
       -- mem res
-      mem_res(15 downto 0)  when "00",
+      mem_res  when "00",
       -- alu res
       alu_res               when "01",
       -- port or don't care

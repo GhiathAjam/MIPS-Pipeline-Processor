@@ -23,7 +23,6 @@ architecture reg_file1 of reg_file is
 TYPE ram_type IS ARRAY(0 TO 7) OF std_logic_vector(15 DOWNTO 0);
 SIGNAL reg_ram : ram_type ;
 
-
 begin
 	
 	PROCESS(clk , regW) IS
@@ -37,7 +36,7 @@ begin
 				reg_ram(5) <= (others => '0');
 				reg_ram(6) <= (others => '0');
 				reg_ram(7) <= (others => '0');
-			ELSIF falling_edge(clk) THEN  
+			ELSIF rising_edge(clk) THEN  
 				IF regW = '1' THEN
 					reg_ram(to_integer(unsigned(rd))) <= datain;
 			

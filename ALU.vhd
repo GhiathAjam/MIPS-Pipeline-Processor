@@ -44,7 +44,6 @@ add_res <= operand1 + operand2 ;
 
 increment_op1 <= operand1 + 1 ;
 
-
 res <= res_temp;
 
 res_temp <= 	NOT d1  when alu_opr = "000"
@@ -55,7 +54,6 @@ res_temp <= 	NOT d1  when alu_opr = "000"
 	else d1 and d2 when alu_opr = "101"
 	else increment_op1 (15 downto 0) ;
 
-
 carry_flag <= '0'  when alu_opr = "000"
 	else '0' when alu_opr = "001"
 	else '0' when alu_opr = "010"
@@ -64,19 +62,13 @@ carry_flag <= '0'  when alu_opr = "000"
 	else '0' when alu_opr = "101"
 	else increment_op1 (16) ;
 
-
 zero_flag <= '1' when to_integer(unsigned(res_temp)) = 0
 	else '0' ;
 
 neg_flag <= '1' when d1 < d2 and alu_opr = "011"
 	else '0' ;
 
-
 pc <= "0000000000000000" & res_temp ;
-
-
-
-
 
 
 end architecture;
