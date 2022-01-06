@@ -20,3 +20,7 @@
 
 - BUFFERS notes:
   - writing is done with falling edge
+
+Exceptions:
+  1- pop when empty stack
+  2- alu res > 0x00FF
