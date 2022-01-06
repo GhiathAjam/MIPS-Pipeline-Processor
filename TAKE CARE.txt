@@ -1,6 +1,8 @@
 is restore flags then jump handled?
+  YES
 
 is modify then store handled?
+  NO, Data Hazard
 
 control hazards? 
 -FLUSH THEN FREEZE UNTIL READY
@@ -9,11 +11,12 @@ control hazards?
 -EDU can modify mem_oper (reset, int...)
 
 writing to flags register?
+  Uses enables 
 
 STACK:
 - assumed stack and data memory same place
-- will use only first 16-bits 
-- still check for invalid addresses when > 2^20-1 ??
+- will use only first 20-bits 
+- still check for invalid addresses when > 2^20-1
 
-STACK POINTER DEFAULT VALUE IS 2^20-1 !!
-Memory size is wrong
+STACK POINTER DEFAULT VALUE IS 2^20-1
+Memory size is 2^20 * 16 BYTES
