@@ -37,11 +37,12 @@ BEGIN
         -- out = in
         PCn_O <= PCn_I;
         PC_O <= PC_I;
-        control_bits <= Inst_I(31 DOWNTO 27);
-        rd <= Inst_I(26 DOWNTO 24);
-        rs <= Inst_I(23 DOWNTO 21);
-        rt <= Inst_I(20 DOWNTO 18);
-        offset <= Inst_I(16 DOWNTO 1);
+	rt <= Inst_I(3 DOWNTO 1);
+        rs <= Inst_I(6 DOWNTO 4);
+        rd <= Inst_I(9 DOWNTO 7);
+        control_bits <= Inst_I(14 DOWNTO 10);
+        -- bit 15 is dont't care
+        offset <= Inst_I(31 DOWNTO 16);
       END IF;
     END IF;
   END PROCESS;

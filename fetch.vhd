@@ -1,7 +1,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
-
+	
 ENTITY fetch IS PORT (
   rst, clk, freeze, unfreeze, flush : IN STD_LOGIC;
   alu_res, mem_res : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -21,7 +21,7 @@ ARCHITECTURE fetch_a OF fetch IS
 
 BEGIN
 
-  Mux2x1 : ENTITY work.mux2x1 PORT MAP ("01", "10", instruction(31), one_or_two);
+  Mux2x1 : ENTITY work.mux2x1 PORT MAP ("01", "10", instruction(0), one_or_two);
   Adder : ENTITY work.pcadder PORT MAP (one_or_two, pc_out, adder_res);
   Mux3x1 : ENTITY work.mux3x1 PORT MAP (adder_res, alu_res, mem_res, sel, new_pc);
   PC : ENTITY work.register32bit PORT MAP (new_pc, clk, rst, pc_out);
