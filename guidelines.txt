@@ -23,4 +23,4 @@
 
 Exceptions:
   1- pop when empty stack
-  2- alu res > 0x00FF
+  2- alu res > 0xFF00
