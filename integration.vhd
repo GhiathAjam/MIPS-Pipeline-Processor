@@ -15,208 +15,208 @@ is
   -- FETCH DECDE BUFFER IS INSIDE FETCH STAGE
 
 -- declare signals from fetch
-    signal PCn, PC: std_logic_vector(31 downto 0);
-    signal ctrl_bits: std_logic_vector(4 downto 0);
-    signal rd, r1, r2: std_logic_vector(2 downto 0);
-    signal immediate: std_logic_vector(15 downto 0);
+    signal PCn_o_f, PC_o_f: std_logic_vector(31 downto 0);
+    signal ctrl_bits_o_f: std_logic_vector(4 downto 0);
+    signal rd_o_f, r1_o_f, r2_o_f: std_logic_vector(2 downto 0);
+    signal immediate_o_f: std_logic_vector(15 downto 0);
 
 -- declare signals from decode
-    signal d1, d2: std_logic_vector(15 downto 0);
+    signal d1_o_d, d2_o_d: std_logic_vector(15 downto 0);
 
-    signal sendPC_memO, frez_fetch_dec_buf, flsh_fetch_dec_buf,
-    flsh_dec_exec_buf, unfrez_fetch_dec_buf,
-    zero_neg_flag_enO, carry_flag_enO,
-    flags_bakO, flags_restoreO, set_carryO,
-    reg_write_back, mem_input_mux_sel,
-    alu_mux_sel, port_read, port_write: std_logic;
+    signal sendPC_mem_o_d, frez_fetch_dec_buf_o_d, flsh_fetch_dec_buf_o_d,
+    flsh_dec_exec_buf_o_d, unfrez_fetch_dec_buf_o_d,
+    zero_neg_flag_en_o_d, carry_flag_en_o_d,
+    flags_bak_o_d, flags_restore_o_d, set_carry_o_d,
+    reg_write_back_o_d, mem_input_mux_sel_o_d,
+    alu_mux_sel_o_d, port_read_o_d, port_write_o_d: std_logic;
 
-    signal PC_mux_sel, write_back_mux_sel,
-    mem_address_mux_sel: std_logic_vector(1 downto 0);
+    signal PC_mux_sel_o_d, write_back_mux_sel_o_d,
+    mem_address_mux_sel_o_d: std_logic_vector(1 downto 0);
 
-    signal alu_oper, sendPC_exO, mem_oper: std_logic_vector(2 downto 0);
+    signal alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d: std_logic_vector(2 downto 0);
  
 -- declare signals from decode_execute_buffer
-    signal sendPC_memO_O,
-    zero_neg_flag_enI, carry_flag_enI,
-    flags_bakO_O, flags_restoreO_O, set_carryI,
-    reg_write_back_O,
-    mem_input_mux_sel_O,
-    alu_mux_sel_O,
-    port_read_O, port_write_O: std_logic;
+    signal sendPC_mem_o_d_b,
+    zero_neg_flag_enI_d, carry_flag_enI_d,
+    flags_bak_o_d_b, flags_restore_o_d_b, set_carryI_d,
+    reg_write_back_o_d_b,
+    mem_input_mux_sel_o_d_b,
+    alu_mux_sel_o_d_b,
+    port_read_o_d_b, port_write_o_d_b: std_logic;
 
-    signal write_back_mux_sel_O, mem_address_mux_sel_O: std_logic_vector(1 downto 0);
+    signal write_back_mux_sel_o_d_b, mem_address_mux_sel_o_d_b: std_logic_vector(1 downto 0);
 
-    signal alu_oper_O, sendPC_exI,
-    mem_oper_O, rd_O: std_logic_vector(2 downto 0);
+    signal alu_oper_o_d_b, sendPC_exI_d,
+    mem_oper_o_d_b, rd_o_d_b: std_logic_vector(2 downto 0);
 
-    signal d1_O, d2_O, immediate_O: std_logic_vector(15 downto 0);
+    signal d1_o_d_b, d2_o_d_b, immediate_o_d_b: std_logic_vector(15 downto 0);
 
-    signal PCnO, PCO: std_logic_vector(31 downto 0);
+    signal PCn_o_d_b, PC_o_d_b: std_logic_vector(31 downto 0);
 
 -- declare signals from execute
-    signal alu_zero_flag, alu_neg_flag, alu_carry_flag: std_logic;
-    signal alu_res: std_logic_vector(15 downto 0);
-    signal alu_res32: std_logic_vector(31 downto 0);
+    signal alu_zero_flag_o_e, alu_neg_flag_o_e, alu_carry_flag_o_e: std_logic;
+    signal alu_res_o_e: std_logic_vector(15 downto 0);
+    signal alu_res32_o_e: std_logic_vector(31 downto 0);
 
 -- declare signals from execute_memory_buffer 
-    signal flags_bakI, flags_restI,
-    reg_write_back_OO,
-    mem_input_mux_sel_OO,
-    port_read_OO, port_write_OO,
-    sendPC_memOO: std_logic;
+    signal flags_bakI_d, flags_restI_d,
+    reg_write_back_o_e_b,
+    mem_input_mux_sel_o_e_b,
+    port_read_o_e_b, port_write_o_e_b,
+    sendPC_mem_o_e_b: std_logic;
 
-    signal write_back_mux_sel_OO,
-    mem_address_mux_sel_OO: std_logic_vector(1 downto 0);
+    signal write_back_mux_sel_o_e_b,
+    mem_address_mux_sel_o_e_b: std_logic_vector(1 downto 0);
 
-    signal mem_oper_OO, rd_OO: std_logic_vector(2 downto 0);
+    signal mem_oper_o_e_b, rd_o_e_b: std_logic_vector(2 downto 0);
 
-    signal alu_resO, d2_OO: std_logic_vector(15 downto 0);
+    signal alu_res_o_e_b, d2_o_e_b: std_logic_vector(15 downto 0);
 
-    signal PCnOO, PCOO: std_logic_vector(31 downto 0);
+    signal PCn_o_e_b, PC_o_e_b: std_logic_vector(31 downto 0);
    
 -- declare signals from memory
-    signal sendPC_memI: std_logic;
+    signal sendPC_memI_d: std_logic;
 
-    signal wb_data: std_logic_vector(15 downto 0);
-    signal mem_res32: std_logic_vector(31 downto 0);
+    signal wb_data_o_m: std_logic_vector(15 downto 0);
+    signal mem_res32_o_m: std_logic_vector(31 downto 0);
 
 -- declare signals from memory_writeback_buffer
     signal regW: std_logic;
-    signal rdO: std_logic_vector(2 downto 0);
-    signal datain: std_logic_vector(15 downto 0);
+    signal rd_o_w_b: std_logic_vector(2 downto 0);
+    signal datain_o_w_b: std_logic_vector(15 downto 0);
 
 begin
 
   fetch:                   entity work.fetch  
   port map(
   -- INPUTS
-    rst, clk, frez_fetch_dec_buf, unfrez_fetch_dec_buf,
-    flsh_fetch_dec_buf, alu_res32, mem_res32, PC_mux_sel,
+    rst, clk, frez_fetch_dec_buf_o_d, unfrez_fetch_dec_buf_o_d,
+    flsh_fetch_dec_buf_o_d, alu_res32_o_e, mem_res32_o_m, PC_mux_sel_o_d,
   -- OUTPUTS
-    PCn, PC, ctrl_bits, rd, r1, r2, immediate);
+    PCn_o_f, PC_o_f, ctrl_bits_o_f, rd_o_f, r1_o_f, r2_o_f, immediate_o_f);
 
   -- FETCH DECDE BUFFER IS INSIDE FETCH STAGE
 
   decode_stage:                  entity work.decode_stage
   port map(
   -- INPUTS
-    clk, rst, r1, r2 , rdO,
-    regW, datain, ctrl_bits,
-    sendPC_memI, zero_neg_flag_enI, carry_flag_enI,
-    flags_bakI, flags_restI, set_carryI,
-    alu_carry_flag, alu_zero_flag, alu_neg_flag,
-    sendPC_exI,
+    clk, rst, r1_o_f, r2_o_f , rd_o_w_b,
+    regW, datain_o_w_b, ctrl_bits_o_f,
+    sendPC_memI_d, zero_neg_flag_enI_d, carry_flag_enI_d,
+    flags_bakI_d, flags_restI_d, set_carryI_d,
+    alu_carry_flag_o_e, alu_zero_flag_o_e, alu_neg_flag_o_e,
+    sendPC_exI_d,
 
   -- OUTPUTS
-    d1, d2,
-    sendPC_memO, frez_fetch_dec_buf, flsh_fetch_dec_buf,
-    flsh_dec_exec_buf, unfrez_fetch_dec_buf,
-    zero_neg_flag_enO, carry_flag_enO,
-    flags_bakO, flags_restoreO, set_carryO,
-    reg_write_back, mem_input_mux_sel,
-    alu_mux_sel, port_read, port_write,
+    d1_o_d, d2_o_d,
+    sendPC_mem_o_d, frez_fetch_dec_buf_o_d, flsh_fetch_dec_buf_o_d,
+    flsh_dec_exec_buf_o_d, unfrez_fetch_dec_buf_o_d,
+    zero_neg_flag_en_o_d, carry_flag_en_o_d,
+    flags_bak_o_d, flags_restore_o_d, set_carry_o_d,
+    reg_write_back_o_d, mem_input_mux_sel_o_d,
+    alu_mux_sel_o_d, port_read_o_d, port_write_o_d,
 
-    PC_mux_sel, write_back_mux_sel,
-    mem_address_mux_sel,
+    PC_mux_sel_o_d, write_back_mux_sel_o_d,
+    mem_address_mux_sel_o_d,
 
-    alu_oper, sendPC_exO, mem_oper); 
+    alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d); 
     
 
   decode_execute_buf:   entity work.decode_execute_buf  
   port map(
   -- INPUTS
-    clk, rst, d1, d2, rd,
-    immediate, sendPC_memO,
-    flsh_dec_exec_buf, zero_neg_flag_enO, carry_flag_enO,
-    flags_bakO, flags_restoreO, set_carryO,
-    reg_write_back, mem_input_mux_sel,
-    alu_mux_sel, port_read, port_write,
-    write_back_mux_sel,
-    mem_address_mux_sel,
-    alu_oper, sendPC_exO, mem_oper,
-    PCn, PC,
+    clk, rst, d1_o_d, d2_o_d, rd_o_f,
+    immediate_o_f, sendPC_mem_o_d,
+    flsh_dec_exec_buf_o_d, zero_neg_flag_en_o_d, carry_flag_en_o_d,
+    flags_bak_o_d, flags_restore_o_d, set_carry_o_d,
+    reg_write_back_o_d, mem_input_mux_sel_o_d,
+    alu_mux_sel_o_d, port_read_o_d, port_write_o_d,
+    write_back_mux_sel_o_d,
+    mem_address_mux_sel_o_d,
+    alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d,
+    PCn_o_f, PC_o_f,
   -- OUTPUTS
-    d1_O, d2_O, rd_O,
-    immediate_O, sendPC_memO_O,
-    zero_neg_flag_enI, carry_flag_enI,
-    flags_bakO_O, flags_restoreO_O, set_carryI,
-    reg_write_back_O,
-    mem_input_mux_sel_O,
-    alu_mux_sel_O,
-    port_read_O, port_write_O,
-    write_back_mux_sel_O,
-    mem_address_mux_sel_O,
-    alu_oper_O, sendPC_exI,
-    mem_oper_O,
-    PCnO, PCO );
+    d1_o_d_b, d2_o_d_b, rd_o_d_b,
+    immediate_o_d_b, sendPC_mem_o_d_b,
+    zero_neg_flag_enI_d, carry_flag_enI_d,
+    flags_bak_o_d_b, flags_restore_o_d_b, set_carryI_d,
+    reg_write_back_o_d_b,
+    mem_input_mux_sel_o_d_b,
+    alu_mux_sel_o_d_b,
+    port_read_o_d_b, port_write_o_d_b,
+    write_back_mux_sel_o_d_b,
+    mem_address_mux_sel_o_d_b,
+    alu_oper_o_d_b, sendPC_exI_d,
+    mem_oper_o_d_b,
+    PCn_o_d_b, PC_o_d_b );
 
   execute_stage:                 entity work.execute_stage  
   port map(
   -- INPUTS
-    d1_O, d2_O, immediate,
-    alu_oper_O, alu_mux_sel_O,
+    d1_o_d_b, d2_o_d_b, immediate_o_d_b,
+    alu_oper_o_d_b, alu_mux_sel_o_d_b,
   -- OUTPUTS
-    alu_zero_flag, alu_neg_flag, alu_carry_flag,
-    alu_res, alu_res32 );
+    alu_zero_flag_o_e, alu_neg_flag_o_e, alu_carry_flag_o_e,
+    alu_res_o_e, alu_res32_o_e );
 
   execute_memory_buf:   entity work.execute_memory_buf  
   port map(
   -- INPUTS
     clk, rst,
-    d2_O, rd_O,
-    flags_bakO_O, flags_restoreO_O,
-    sendPC_memO_O,
-    reg_write_back_O,
-    mem_input_mux_sel_O,
-    port_read_O, port_write_O,
-    write_back_mux_sel_O,
-    mem_address_mux_sel_O,
-    mem_oper_O, alu_res,
-    PCnO, PCO,
+    d2_o_d_b, rd_o_d_b,
+    flags_bak_o_d_b, flags_restore_o_d_b,
+    sendPC_mem_o_d_b,
+    reg_write_back_o_d_b,
+    mem_input_mux_sel_o_d_b,
+    port_read_o_d_b, port_write_o_d_b,
+    write_back_mux_sel_o_d_b,
+    mem_address_mux_sel_o_d_b,
+    mem_oper_o_d_b, alu_res_o_e,
+    PCn_o_d_b, PC_o_d_b,
   -- OUTPUS
-    d2_OO, rd_OO,
-    flags_bakI, flags_restI,
-    sendPC_memOO,
-    reg_write_back_OO,
-    mem_input_mux_sel_OO,
-    port_read_OO, port_write_OO,
-    write_back_mux_sel_OO,
-    mem_address_mux_sel_OO,
-    mem_oper_OO, alu_resO,
-    PCnOO, PCOO );
+    d2_o_e_b, rd_o_e_b,
+    flags_bakI_d, flags_restI_d,
+    sendPC_mem_o_e_b,
+    reg_write_back_o_e_b,
+    mem_input_mux_sel_o_e_b,
+    port_read_o_e_b, port_write_o_e_b,
+    write_back_mux_sel_o_e_b,
+    mem_address_mux_sel_o_e_b,
+    mem_oper_o_e_b, alu_res_o_e_b,
+    PCn_o_e_b, PC_o_e_b );
    
 
 
   memory:                  entity work.memory  
   port map(
   -- INPUTS
-    rst, clk, sendPC_memOO,
-    flags_bakI, flags_restI,
-    mem_input_mux_sel_OO,
-    port_read_OO, port_write_OO,
+    rst, clk, sendPC_mem_o_e_b,
+    flags_bakI_d, flags_restI_d,
+    mem_input_mux_sel_o_e_b,
+    port_read_o_e_b, port_write_o_e_b,
 
-    write_back_mux_sel_OO,
-    mem_address_mux_sel_OO,
+    write_back_mux_sel_o_e_b,
+    mem_address_mux_sel_o_e_b,
 
-    mem_oper_OO,
+    mem_oper_o_e_b,
 
-    port_inp, d2_OO,
-    alu_resO,
-    PCnOO, PCOO,
+    port_inp, d2_o_e_b,
+    alu_res_o_e_b,
+    PCn_o_e_b, PC_o_e_b,
   -- OUTPUTS
-    sendPC_memI,
+    sendPC_memI_d,
 
-    wb_data, port_outp, mem_res32 ); 
+    wb_data_o_m, port_outp, mem_res32_o_m ); 
 
 memory_writeback_buffer: entity work.memory_writeback_buffer  
   port map(
   -- INPUTS
     rst, clk,
-    reg_write_back_OO,
-    rd_OO, wb_data,
+    reg_write_back_o_e_b,
+    rd_o_e_b, wb_data_o_m,
   -- OUTPUTS
     regW,
-    rdO, datain );  
+    rd_o_w_b, datain_o_w_b );  
 
 end architecture;
 
