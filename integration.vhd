@@ -185,8 +185,6 @@ begin
     mem_oper_o_e_b, alu_res_o_e_b,
     PCn_o_e_b, PC_o_e_b );
    
-
-
   memory:                  entity work.memory  
   port map(
   -- INPUTS

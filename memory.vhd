@@ -19,7 +19,7 @@ entity memory is port(
   mem_operI:  in  std_logic_vector(2 downto 0);
 
   -- port input
-  port_inp,
+  outer_port_inp,
   -- second Register data
   data2,
   -- alu res
@@ -34,7 +34,7 @@ entity memory is port(
   -- write back data
   wb_data,
   -- port output
-  port_outp:  out std_logic_vector(15 downto 0);
+  outer_port_outp:  out std_logic_vector(15 downto 0);
   -- mem res to PC 
   mem_res32:  out std_logic_vector(31 downto 0) );
 ---
@@ -50,7 +50,7 @@ signal mem_operO: std_logic_vector(2 downto 0);
 -- mem address from EIU
 signal mem_address, 
 -- alias to port_outp
-prt_outp, mem_res: std_logic_vector(15 downto 0);
+inner_port_outp, mem_res: std_logic_vector(15 downto 0);
 
 signal mem_to_SP, SP_to_mem :  std_logic_vector(31 downto 0);
 
@@ -78,13 +78,13 @@ begin
   PRT: entity work.PRT port map (
     clk=>clk,
     rst=>rst,
-    inp=>data2,
-    port_inp=>port_inp,
-    port_outp=>prt_outp,
+    inner_port_inp=>data2,
+    outer_port_inp=>outer_port_inp,
+    inner_port_outp=>inner_port_outp,
+    outer_port_outp=>outer_port_outp,
     port_read=>port_read,
     port_write=>port_write);
 
-  port_outp <= prt_outp;
   mem_res <= mem_arr(to_integer(unsigned(mem_address)));
   mem_res32 <= mem_arr(to_integer(unsigned(mem_address)+1)) & mem_arr(to_integer(unsigned(mem_address)));
 
@@ -104,7 +104,7 @@ begin
       -- alu res
       alu_res               when "01",
       -- port or don't care
-      prt_outp              when others;
+      inner_port_outp       when others;
   
 end architecture;
 
