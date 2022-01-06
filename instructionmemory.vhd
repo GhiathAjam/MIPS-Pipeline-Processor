@@ -12,5 +12,5 @@ ARCHITECTURE instructionmemory_a OF instructionmemory IS
   TYPE ram_type IS ARRAY (0 TO 1023) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
   SIGNAL ram : ram_type;
 BEGIN
-  instruction <= ram(to_integer(unsigned(address))) & ram(to_integer(unsigned(address) + 1));
+  instruction <= ram(to_integer(unsigned(address) + 1)) & ram(to_integer(unsigned(address)));
 END;

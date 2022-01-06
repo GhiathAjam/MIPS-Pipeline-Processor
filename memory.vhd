@@ -86,7 +86,7 @@ begin
 
   port_outp <= prt_outp;
   mem_res <= mem_arr(to_integer(unsigned(mem_address)));
-  mem_res32 <= mem_arr(to_integer(unsigned(mem_address))) & mem_arr(to_integer(unsigned(mem_address))+1);
+  mem_res32 <= mem_arr(to_integer(unsigned(mem_address)+1)) & mem_arr(to_integer(unsigned(mem_address)));
 
   process(clk) 
     begin
