@@ -1,12 +1,3 @@
-alu operations: [ DONT FORGET FLAGS ]
-000- not FIRST OPERAND
-001- pass first operand
-010- pass second operand
-011- sub
-100- add
-101- and
-110- increment first operand
-
 - INT idx
  1- idx is passed as immediate
  2- alu passes imm as alu res
@@ -16,6 +7,13 @@ alu operations: [ DONT FORGET FLAGS ]
   4.1- EDU passes 6 to mem address to get address of IVT
   4.2- EDU passes IVT address again to memory after adding alu res to it
   4.3- mem res is sent to pc
+
+- all readings except buffers and registers are combinational
+- PC  register updates on falling edge (or later if needed)
+- buffers update on falling edge (or later if needed)
+- alu is combinational
+- stack pointer is updated AFTER operation
+
 
 - MEMORY notes:
  - writing to memory, stack or port is done with falling edge
