@@ -13,7 +13,8 @@ BEGIN
     BEGIN
         IF (Rst = '1') THEN
             q <= (OTHERS => '0');
-        ELSIF rising_edge (clk) THEN
+        ELSIF falling_edge (clk) THEN
+            -- wait 
             q <= d;
         END IF;
     END PROCESS;
