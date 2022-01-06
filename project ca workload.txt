@@ -1,20 +1,34 @@
 Gheiath:
 1- Control Unit
-2- assembler
-3- EIU -- Exception Interrupt Unit
-3- memory stage 
-4- mem/wb buffer
+4- memory stage 
+5- mem/wb buffer
+6- execution/memory buffer
+7- port
+8- Integration
 
 Nossir:
-1 - execution stage
-2 - execution/memory buffer
 
 
-sayed:
-1 - decode stage
-2 - decode/execute buffer
+Sayed:
+1- decode stage
+2- decode/execute buffer
+3- execution stage
+4- ALU
+5- register file
+6- Integration
 
-shabrawy: 
-1 - fetch stage
-2 - fetch/decode buffer
-  
+Shabrawy: 
+1- fetch stage
+2- fetch/decode buffer
+3- instruction memory
+
+Other work:
+
+  1- Assembler
+      NOT DONE
+
+  2- EIU -- Exception Interrupt Unit
+    i. basic skeleton -> DONE by Gheiath
+    i. reset -> DONE by Gheiath
+    ii. INT
+    iii. Exceptions
