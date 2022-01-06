@@ -29,7 +29,7 @@ signal second_operand : std_logic_vector(15 downto 0);
 
 begin
 
-second_operand <= d2 when alu_mux_sel = '0'
+second_operand <= d2 when alu_mux_sel = '1'
 	else immediate;
 
 alu_unit: entity work.alu port map (d1, second_operand, alu_opr, zero_flag, neg_flag, carry_flag, res, pc) ;
