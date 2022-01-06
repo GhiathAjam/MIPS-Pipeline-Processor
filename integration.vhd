@@ -81,7 +81,7 @@ is
     signal mem_res32_o_m: std_logic_vector(31 downto 0);
 
 -- declare signals from memory_writeback_buffer
-    signal regW: std_logic;
+    signal regW_o_w_b: std_logic;
     signal rd_o_w_b: std_logic_vector(2 downto 0);
     signal datain_o_w_b: std_logic_vector(15 downto 0);
 
@@ -101,7 +101,7 @@ begin
   port map(
   -- INPUTS
     clk, rst, r1_o_f, r2_o_f , rd_o_w_b,
-    regW, datain_o_w_b, ctrl_bits_o_f,
+    regW_o_w_b, datain_o_w_b, ctrl_bits_o_f,
     sendPC_memI_d, zero_neg_flag_enI_d, carry_flag_enI_d,
     flags_bakI_d, flags_restI_d, set_carryI_d,
     alu_carry_flag_o_e, alu_zero_flag_o_e, alu_neg_flag_o_e,
@@ -215,7 +215,7 @@ memory_writeback_buffer: entity work.memory_writeback_buffer
     reg_write_back_o_e_b,
     rd_o_e_b, wb_data_o_m,
   -- OUTPUTS
-    regW,
+    regW_o_w_b,
     rd_o_w_b, datain_o_w_b );  
 
 end architecture;
