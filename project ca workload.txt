@@ -24,11 +24,20 @@ Shabrawy:
 
 Other work:
 
-  1- Assembler
+  1- Assembler  -> sayed
       NOT DONE
 
-  2- EIU -- Exception Interrupt Unit
+  2- EIU -- Exception Interrupt Unit  -> ghiath
     i. basic skeleton -> DONE by Gheiath
     i. reset -> DONE by Gheiath
     ii. INT
     iii. Exceptions
+  
+  3- 
+    i. control unit finalising ->   sayed
+    ii. memory writing  -> ghiath 
+    iii. stack   -> ghiath
+
+ 4- testing the memory -> shabrawy
+
+ 5- testing control instructions  -> shabrawy
