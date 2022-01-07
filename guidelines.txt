@@ -1,5 +1,5 @@
 - INT idx
- 1- idx is passed as immediate
+ 1- idx is passed as immediate???!!! No, as Rd
  2- alu passes imm as alu res
  3- EDU knows it is interrupt from mem-address mux
  4- EDU enters a procedure of multiple cycles:
@@ -24,3 +24,13 @@
 Exceptions:
   1- pop when empty stack
   2- alu res > 0xFF00
+
+
+Exceptions:
+  1- excpetions handlrs addresss are stored in DATA MEMORY M[2], M[3], M[4], M[5]
+  2- ACTUAL handlers are stored in INSTRUCTION MEMORY in IM[ M[2]&M[3] ], IM[ M[4]&M[5] ]
+
+Interrupts:
+  1- IVT address is stoed in DATA memory in M[6]&M[7]
+  2- Interrupt handlers addresses are stored in DATA memory in M[ M[6]&M[7] +idx ]
+  3- Actual interrupt handlers are stored in INSTRUCTION memory in IM[ M[ M[6]&M[7] +idx ] ]
