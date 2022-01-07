@@ -49,12 +49,15 @@ architecture arc_memory of memory is
 
 -- mem/stack | read/write | 16/32
 signal mem_operO: std_logic_vector(2 downto 0);
--- mem address from EIU
-signal mem_address, 
+ 
 -- alias to port_outp
-inner_port_outp, mem_res: std_logic_vector(15 downto 0);
+signal inner_port_outp, mem_res: std_logic_vector(15 downto 0);
 
-signal mem_to_SP, SP_to_mem :  std_logic_vector(31 downto 0);
+-- mem address from EIU
+signal mem_address: std_logic_vector(19 downto 0);
+
+-- SP
+signal mem_to_SP, SP_to_mem:  std_logic_vector(31 downto 0);
 
 -- 2^20 --> to always be able to get 32 bits
 type ram_type is array(0 TO 1048576) of std_logic_vector(15 downto 0);
@@ -62,7 +65,8 @@ signal mem_arr:     ram_type;
 
 begin
 
-  SP: entity work.reg_N  generic map (32) port map (clk, rst, mem_to_SP, SP_to_mem);
+  -- UPDATES on Falling edge
+  SP: entity work.reg_stack port map (clk, rst, mem_to_SP, SP_to_mem);
 
   EIU: entity work.EIU  port map (
     PC=>PC,
@@ -88,26 +92,44 @@ begin
     port_read=>port_read,
     port_write=>port_write);
 
-  mem_res <= mem_arr(to_integer(unsigned(mem_address)));
+  mem_res   <= mem_arr(to_integer(unsigned(mem_address)));
   mem_res32 <= mem_arr(to_integer(unsigned(mem_address)+1)) & mem_arr(to_integer(unsigned(mem_address)));
 
   process(clk) 
     begin
       if falling_edge(clk) then
+
+        -- UPDATING STACK POINTER
+        -- SP will accept on rising edge
+        if mem_address_mux_sel="01" then
+          -- stack read 16
+          if mem_operI="100" then
+            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) + 1);
+          -- stack read 32
+          elsif mem_operI="101" then
+            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) + 2);
+          -- stack write 16
+          elsif mem_operI="110" then
+            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) - 1);
+          -- stack write 32
+          elsif mem_operI="111" then
+            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) - 2);
+          end if;
+        end if;
+
         -- TODO: Writing data to address, if mem_write
       end if;
-  end process;
-
+    end process;
 
   -- write back data
   with write_back_mux_sel select
     wb_data <=
       -- mem res
-      mem_res  when "00",
+      mem_res          when "00",
       -- alu res
-      alu_res               when "01",
+      alu_res          when "01",
       -- port or don't care
-      inner_port_outp       when others;
+      inner_port_outp  when others;
   
 end architecture;
 
