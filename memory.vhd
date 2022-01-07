@@ -15,6 +15,8 @@ entity memory is port(
   -- alu res or stack pointer or INT
   mem_address_mux_sel:  in  std_logic_vector(1 downto 0);
 
+  -- R destination, has idx of interrupt 
+  Rd,
   -- mem/stack | read/write | 16/32
   mem_operI:  in  std_logic_vector(2 downto 0);
 
@@ -70,6 +72,7 @@ begin
     alu_res=>alu_res,
     sendPC_memI=>sendPC_memI,
     sendPC_memO=>sendPC_memO,
+    Rd=>Rd,
     mem_operI=>mem_operI,
     mem_operO=>mem_operO,
     mem_address_mux_sel=>mem_address_mux_sel,

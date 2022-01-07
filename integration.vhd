@@ -87,6 +87,9 @@ is
 
 begin
 
+  --
+  -- FETCH
+  --
   fetch:                   entity work.fetch  
   port map(
   -- INPUTS
@@ -97,6 +100,9 @@ begin
 
   -- FETCH DECDE BUFFER IS INSIDE FETCH STAGE
 
+  --
+  -- DECODE
+  --
   decode_stage:                  entity work.decode_stage
   port map(
   -- INPUTS
@@ -122,6 +128,9 @@ begin
     alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d); 
     
 
+  --
+  -- DECODE EXCUTE BUFFER
+  --
   decode_execute_buf:   entity work.decode_execute_buf  
   port map(
   -- INPUTS
@@ -150,6 +159,10 @@ begin
     mem_oper_o_d_b,
     PCn_o_d_b, PC_o_d_b );
 
+
+  --
+  -- EXCUTE
+  --
   execute_stage:                 entity work.execute_stage  
   port map(
   -- INPUTS
@@ -159,6 +172,9 @@ begin
     alu_zero_flag_o_e, alu_neg_flag_o_e, alu_carry_flag_o_e,
     alu_res_o_e, alu_res32_o_e );
 
+  --
+  -- EXECUTE MEMOTY BUFFER
+  --
   execute_memory_buf:   entity work.execute_memory_buf  
   port map(
   -- INPUTS
@@ -185,6 +201,10 @@ begin
     mem_oper_o_e_b, alu_res_o_e_b,
     PCn_o_e_b, PC_o_e_b );
    
+
+  --
+  -- MEMORY
+  --
   memory:                  entity work.memory  
   port map(
   -- INPUTS
@@ -196,6 +216,7 @@ begin
     write_back_mux_sel_o_e_b,
     mem_address_mux_sel_o_e_b,
 
+    rd_o_e_b,
     mem_oper_o_e_b,
 
     port_inp, d2_o_e_b,
@@ -206,7 +227,11 @@ begin
 
     wb_data_o_m, port_outp, mem_res32_o_m ); 
 
-memory_writeback_buffer: entity work.memory_writeback_buffer  
+
+  --
+  -- MEMORY WRITEBACK BUFFER
+  --
+  memory_writeback_buffer: entity work.memory_writeback_buffer  
   port map(
   -- INPUTS
     rst, clk,

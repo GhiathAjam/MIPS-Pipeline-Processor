@@ -7,6 +7,8 @@ entity EIU is port(
   rst, clk, sendPC_memI:  in  std_logic;
   -- alu res or stack pointer or INT
   mem_address_mux_sel:  in std_logic_vector(1 downto 0);
+  -- R destination, has idx of interrupt 
+  Rd,
   -- mem/stack | read/write | 16/32
   mem_operI:  in  std_logic_vector(2 downto 0);
   -- memory address from load,store OR index of INT
