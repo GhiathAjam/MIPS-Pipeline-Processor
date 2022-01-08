@@ -41,10 +41,6 @@ sim:/integration/port_outp
 force -freeze sim:/integration/clk 1 0, 0 {50 ps} -r 100
 force -freeze sim:/integration/rst 1 
 
-run
-run
-force -freeze sim:/integration/rst 0 0
-
 mem load -skip 0 -filltype value -filldata 0 -fillradix symbolic /integration/fetch/InstructionMemory/ram
 ''')
 
@@ -237,3 +233,11 @@ for i in mem:
   outp.write(f'mem load -filltype value -filldata {mem[i]} -fillradix symbolic /integration/fetch/InstructionMemory/ram({i}) \n')
   # outp.write(f'{i}: {mem[i]}\n')
   
+
+
+outp.write('''
+run
+run
+force -freeze sim:/integration/rst 0 0
+'''
+ )
