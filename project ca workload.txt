@@ -31,8 +31,9 @@ Other work:
     i. basic skeleton -> DONE by Gheiath
     i. reset -> DONE by Gheiath
     ii. INT
-    iii. Exceptions
-  
+    iii. Exceptions -> DONE by Gheiath
+
+
   3- 
     i. control unit finalising ->   sayed
     ii. memory writing  -> ghiath 
