@@ -20,7 +20,7 @@ A0
 .ORG A0
 SETC           #C --> 1
 NOP            #No change
-NOT R1         #R1 =FFFF , C--> no change, N --> 1, Z --> 0
+NOT R1         #R1 = FFFF , C--> no change, N --> 1, Z --> 0
 NOP            #No change
 NOP            #No change
 NOP            #No change
@@ -44,7 +44,7 @@ NOP            #No change
 NOP            #No change
 NOP            #No change
 NOP            #No change
-NOT R2	       #R2= FFFFFFEF, C--> no change, N -->1,Z-->0
+NOT R2	       #R2= FFF5, C--> no change, N -->1,Z-->0
 NOP            #No change
 NOP            #No change
 NOP            #No change
@@ -59,3 +59,4 @@ NOP            #No change
 OUT R1
 OUT R2
 HLT
+OUT R1

@@ -16,10 +16,13 @@ END;
 
 ARCHITECTURE fetch_decode_buffer_a OF fetch_decode_buffer IS
 BEGIN
-  PROCESS (clk, rst, flush)
+  PROCESS IS
     VARIABLE isFrozen : BOOLEAN := false; -- Variable Not Signal to update Immediatly not at the end of process
   BEGIN
-    IF flush = '1' or rst = '1' THEN
+
+    wait on clk, rst;
+
+    IF rst = '1' THEN
       PCn_O <= (OTHERS => '0');
       PC_O <= (OTHERS => '0');
       control_bits <= (OTHERS => '0');
@@ -28,16 +31,29 @@ BEGIN
       rt <= (OTHERS => '0');
       offset <= (OTHERS => '0');
     ELSIF falling_edge(clk) THEN
+      WAIT FOR 20 ps;
+
+      IF flush = '1' THEN
+        PCn_O <= (OTHERS => '0');
+        PC_O <= (OTHERS => '0');
+        control_bits <= (OTHERS => '0');
+        rd <= (OTHERS => '0');
+        rs <= (OTHERS => '0');
+        rt <= (OTHERS => '0');
+        offset <= (OTHERS => '0');
+      END IF;
+
       IF freeze = '1' THEN
         isFrozen := true;
       ELSIF unfreeze = '1' THEN
         isFrozen := false;
       END IF;
+
       IF NOT isFrozen THEN -- If isFrozzen => latch the old out
         -- out = in
         PCn_O <= PCn_I;
         PC_O <= PC_I;
-	rt <= Inst_I(3 DOWNTO 1);
+        rt <= Inst_I(3 DOWNTO 1);
         rs <= Inst_I(6 DOWNTO 4);
         rd <= Inst_I(9 DOWNTO 7);
         control_bits <= Inst_I(14 DOWNTO 10);
@@ -45,5 +61,6 @@ BEGIN
         offset <= Inst_I(31 DOWNTO 16);
       END IF;
     END IF;
+
   END PROCESS;
 END;

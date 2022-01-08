@@ -8,7 +8,8 @@ entity memory is port(
   flags_bakI, flags_restI,
   -- data2 or next PC
   mem_input_mux_sel,
-  port_read, port_write:  in  std_logic;
+  port_read, port_write,
+  memEn:           in  std_logic;
 
   --- mem res, alu res, port res
   write_back_mux_sel,
@@ -80,7 +81,9 @@ begin
     mem_operI=>mem_operI,
     mem_operO=>mem_operO,
     mem_address_mux_sel=>mem_address_mux_sel,
-    mem_address=>mem_address);
+    mem_address=>mem_address,
+    memEn=>memEn
+    );
 
   PRT: entity work.PRT port map (
     clk=>clk,
@@ -100,7 +103,7 @@ begin
       if falling_edge(clk) then
 
         -- UPDATING STACK POINTER
-        -- SP will accept on rising edge
+        -- SP will accept on next rising edge
         if mem_address_mux_sel="01" then
           -- stack read 16
           if mem_operI="100" then

@@ -35,23 +35,23 @@ begin
 	sub_res <= operand1 - operand2;
 	increment_op1 <= operand1 + 1 ;
 
-	-- 000- not FIRST OPERAND
+	-- 000- and
 	-- 001- pass first operand
 	-- 010- pass second operand
 	-- 011- sub
 	-- 100- add
-	-- 101- and
+	-- 101- not FIRST OPERAND
 	-- 110- increment first operand
 
-	res_temp <= 	NOT operand1  				when alu_opr = "000"
+	res_temp <= 	NOT operand1  				when alu_opr = "101"
 					else operand1								when alu_opr = "001"
 					else operand2 							when alu_opr = "010"
 					else sub_res 								when alu_opr = "011"
 					else add_res								when alu_opr = "100"
-					else operand1 and operand2	when alu_opr = "101"
+					else operand1 and operand2	when alu_opr = "000"
 					else increment_op1;
 
-	zero_flag <= '1' when to_integer(unsigned(res_temp)) = 0
+	zero_flag <= '1' when to_integer(unsigned(res_temp(15 downto 0))) = 0
 		else '0' ;
 
 	neg_flag <= '1' when res_temp(15)='1'

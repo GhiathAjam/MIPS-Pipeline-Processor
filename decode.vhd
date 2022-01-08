@@ -38,7 +38,7 @@ port (
 
 -------------------------------------------------------
   -- outputs concerning the control unit
-    sendPC_memO,
+    alu_or_PCn, sendPC_memO,
     frez_fetch_dec_buf, flsh_fetch_dec_buf,
     flsh_dec_exec_buf,
     unfrez_fetch_dec_buf,
@@ -63,7 +63,10 @@ port (
     -- no branch, branch zero, branch neg, branch carr, BRANCH ALWAYS
     sendPC_exO,
     -- mem/stack | read/write | 16/32
-    mem_oper:  out  std_logic_vector(2 downto 0) );
+    mem_oper:  out  std_logic_vector(2 downto 0);
+    
+    memEn:  out std_logic
+    );
 
 end entity;
 
@@ -90,7 +93,8 @@ controlUnit: entity work.control_unit port map (
               reg_write_back,
               mem_input_mux_sel, alu_mux_sel, port_read, port_write,
               PC_mux_sel, write_back_mux_sel, mem_address_mux_sel,
-              alu_oper, sendPC_exO, mem_oper
+              alu_oper, sendPC_exO, mem_oper, alu_or_PCn,
+              memEn
             );
 
 

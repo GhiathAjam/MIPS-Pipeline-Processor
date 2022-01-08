@@ -84,6 +84,8 @@ for line in file:
     rd = bin(int(wrds[1][1]))[2:]
     rd = '0'*(3-len(rd)) + rd
     mem[curr] = mem[curr][:Rd] + rd + mem[curr][Rd+3:]
+    # R1
+    mem[curr] = mem[curr][:R1] + rd + mem[curr][R1+3:]
 
   elif wrds[0]=='INC':
     mem[curr] = '0001000000000000'
@@ -91,6 +93,8 @@ for line in file:
     rd = bin(int(wrds[1][1]))[2:]
     rd = '0'*(3-len(rd)) + rd
     mem[curr] = mem[curr][:Rd] + rd + mem[curr][Rd+3:]
+    # R1
+    mem[curr] = mem[curr][:R1] + rd + mem[curr][R1+3:]
 
   elif wrds[0]=='OUT':
     mem[curr] = '0001010000000000'
@@ -117,7 +121,7 @@ for line in file:
   # iadd, Rd, R1, imm	01100
 
   elif wrds[0]=='IADD':
-    mem[curr] = '0010110000000000'
+    mem[curr] = '0011000000000001'
     # Rd
     rd = bin(int(wrds[1][1]))[2:]
     rd = '0'*(3-len(rd)) + rd
@@ -216,9 +220,23 @@ for line in file:
 
   ## NUMERIC VALUE
   else:
+
+    # if len(wrds[0]) <= 2: # One Word
+
     mem[curr] = bin(int(wrds[0], base=16))[2:]
     mem[curr] = '0'*(16-len( mem[curr])) +  mem[curr]
     outp.write(f'mem load -filltype value -filldata {mem[curr]} -fillradix symbolic /integration/memory/mem_arr({curr})\n')
+    
+    curr += 1
+    mem[curr] = '0'*16
+    outp.write(f'mem load -filltype value -filldata {mem[curr]} -fillradix symbolic /integration/memory/mem_arr({curr})\n')
+
+    # else  # TWO WORDS
+      # mem[curr] = bin(int(wrds[0][]))
+
+    # outp.write(f'mem load -filltype value -filldata {mem[curr]} -fillradix symbolic /integration/memory/mem_arr({curr})\n')
+    
+
 
   # print(curr)
   # mem[curr] = '0'*(16-len(mem[curr])) + mem[curr]

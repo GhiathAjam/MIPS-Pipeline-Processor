@@ -28,7 +28,8 @@ is
     zero_neg_flag_en_o_d, carry_flag_en_o_d,
     flags_bak_o_d, flags_restore_o_d, set_carry_o_d,
     reg_write_back_o_d, mem_input_mux_sel_o_d,
-    alu_mux_sel_o_d, port_read_o_d, port_write_o_d: std_logic;
+    alu_mux_sel_o_d, port_read_o_d, port_write_o_d, alu_PCn_o_d,
+    memEn_o_d  : std_logic;
 
     signal PC_mux_sel_o_d, write_back_mux_sel_o_d,
     mem_address_mux_sel_o_d: std_logic_vector(1 downto 0);
@@ -42,7 +43,8 @@ is
     reg_write_back_o_d_b,
     mem_input_mux_sel_o_d_b,
     alu_mux_sel_o_d_b,
-    port_read_o_d_b, port_write_o_d_b: std_logic;
+    port_read_o_d_b, port_write_o_d_b,
+    memEn_o_d_b   : std_logic;
 
     signal write_back_mux_sel_o_d_b, mem_address_mux_sel_o_d_b: std_logic_vector(1 downto 0);
 
@@ -74,6 +76,8 @@ is
 
     signal PCn_o_e_b, PC_o_e_b: std_logic_vector(31 downto 0);
    
+    signal memEn_o_e_b: std_logic;
+
 -- declare signals from memory
     signal sendPC_memI_d: std_logic;
 
@@ -94,7 +98,7 @@ begin
   port map(
   -- INPUTS
     rst, clk, frez_fetch_dec_buf_o_d, unfrez_fetch_dec_buf_o_d,
-    flsh_fetch_dec_buf_o_d, alu_res32_o_e, mem_res32_o_m, PC_mux_sel_o_d,
+    flsh_fetch_dec_buf_o_d, alu_PCn_o_d, alu_res32_o_e, mem_res32_o_m, PCn_o_d_b, PC_mux_sel_o_d,
   -- OUTPUTS
     PCn_o_f, PC_o_f, ctrl_bits_o_f, rd_o_f, r1_o_f, r2_o_f, immediate_o_f);
 
@@ -114,7 +118,7 @@ begin
     sendPC_exI_d,
 
   -- OUTPUTS
-    d1_o_d, d2_o_d,
+    d1_o_d, d2_o_d, alu_PCn_o_d,
     sendPC_mem_o_d, frez_fetch_dec_buf_o_d, flsh_fetch_dec_buf_o_d,
     flsh_dec_exec_buf_o_d, unfrez_fetch_dec_buf_o_d,
     zero_neg_flag_en_o_d, carry_flag_en_o_d,
@@ -125,7 +129,8 @@ begin
     PC_mux_sel_o_d, write_back_mux_sel_o_d,
     mem_address_mux_sel_o_d,
 
-    alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d); 
+    alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d,
+    memEn_o_d); 
     
 
   --
@@ -144,6 +149,7 @@ begin
     mem_address_mux_sel_o_d,
     alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d,
     PCn_o_f, PC_o_f,
+    memEn_o_d,
   -- OUTPUTS
     d1_o_d_b, d2_o_d_b, rd_o_d_b,
     immediate_o_d_b, sendPC_mem_o_d_b,
@@ -157,7 +163,8 @@ begin
     mem_address_mux_sel_o_d_b,
     alu_oper_o_d_b, sendPC_exI_d,
     mem_oper_o_d_b,
-    PCn_o_d_b, PC_o_d_b );
+    PCn_o_d_b, PC_o_d_b,
+    memEn_o_d_b );
 
 
   --
@@ -189,6 +196,7 @@ begin
     mem_address_mux_sel_o_d_b,
     mem_oper_o_d_b, alu_res_o_e,
     PCn_o_d_b, PC_o_d_b,
+    memEn_o_d_b,
   -- OUTPUS
     d2_o_e_b, rd_o_e_b,
     flags_bakI_d, flags_restI_d,
@@ -199,7 +207,8 @@ begin
     write_back_mux_sel_o_e_b,
     mem_address_mux_sel_o_e_b,
     mem_oper_o_e_b, alu_res_o_e_b,
-    PCn_o_e_b, PC_o_e_b );
+    PCn_o_e_b, PC_o_e_b,
+    memEn_o_e_b );
    
 
   --
@@ -212,6 +221,7 @@ begin
     flags_bakI_d, flags_restI_d,
     mem_input_mux_sel_o_e_b,
     port_read_o_e_b, port_write_o_e_b,
+    memEn_o_e_b,
 
     write_back_mux_sel_o_e_b,
     mem_address_mux_sel_o_e_b,

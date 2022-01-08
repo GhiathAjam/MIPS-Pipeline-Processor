@@ -9,21 +9,27 @@ add wave -position insertpoint  sim:/integration/clk sim:/integration/rst sim:/i
 force -freeze sim:/integration/clk 1 0, 0 {50 ps} -r 100
 force -freeze sim:/integration/rst 1 
 
-run
-run
-force -freeze sim:/integration/rst 0 0
-
 mem load -skip 0 -filltype value -filldata 0 -fillradix symbolic /integration/fetch/InstructionMemory/ram
 mem load -filltype value -filldata 0000000011111111 -fillradix symbolic /integration/memory/mem_arr(0)
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/memory/mem_arr(1)
 mem load -filltype value -filldata 0000000100000000 -fillradix symbolic /integration/memory/mem_arr(2)
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/memory/mem_arr(3)
 mem load -filltype value -filldata 0000000101010000 -fillradix symbolic /integration/memory/mem_arr(4)
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/memory/mem_arr(5)
 mem load -filltype value -filldata 0000001000000000 -fillradix symbolic /integration/memory/mem_arr(6)
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/memory/mem_arr(7)
 mem load -filltype value -filldata 0000001001010000 -fillradix symbolic /integration/memory/mem_arr(8)
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/memory/mem_arr(9)
 mem load -filltype value -filldata 0000000011111111 -fillradix symbolic /integration/fetch/InstructionMemory/ram(0) 
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(1) 
 mem load -filltype value -filldata 0000000100000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(2) 
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(3) 
 mem load -filltype value -filldata 0000000101010000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(4) 
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(5) 
 mem load -filltype value -filldata 0000001000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(6) 
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(7) 
 mem load -filltype value -filldata 0000001001010000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(8) 
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(9) 
 mem load -filltype value -filldata 0001100010000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(255) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(256) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(257) 
@@ -48,7 +54,7 @@ mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integra
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(276) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(277) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(278) 
-mem load -filltype value -filldata 0010000111010000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(279) 
+mem load -filltype value -filldata 0010001010110000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(279) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(280) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(281) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(282) 
@@ -72,7 +78,7 @@ mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integra
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(300) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(301) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(302) 
-mem load -filltype value -filldata 0010110100100000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(303) 
+mem load -filltype value -filldata 0011000100100001 -fillradix symbolic /integration/fetch/InstructionMemory/ram(303) 
 mem load -filltype value -filldata 1111111111111111 -fillradix symbolic /integration/fetch/InstructionMemory/ram(304) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(305) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(306) 
@@ -84,3 +90,8 @@ mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integra
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(312) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(313) 
 mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(314) 
+mem load -filltype value -filldata 0000000000000000 -fillradix symbolic /integration/fetch/InstructionMemory/ram(315) 
+
+run
+run
+force -freeze sim:/integration/rst 0 0

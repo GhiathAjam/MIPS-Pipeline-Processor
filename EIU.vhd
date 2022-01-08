@@ -4,7 +4,9 @@ use ieee.numeric_std.all;
 
 entity EIU is port(
 -- inputs
-  rst, clk, sendPC_memI:  in  std_logic;
+  rst, clk, sendPC_memI,
+  -- to know if data requested real or not (not throw exceptions when no data needed!)
+  memEn:  in  std_logic;
   -- alu res or stack pointer or INT
   mem_address_mux_sel:    in std_logic_vector(1 downto 0);
   -- R destination, has idx of interrupt 
@@ -63,14 +65,14 @@ begin
 
         -- DATA ACCESS EXCEPTIONS
         -- cant read/write 16 when res > 0xFF00
-        if ( mem_operI="000" or mem_operI="010" ) and alu_res >= X"FF00" then
-          EIU_to_EPC  <= SP;
+        if ( (mem_operI="000" and memEn='1') or mem_operI="010" ) and alu_res >= X"FF00" then
+          EIU_to_EPC  <= PC;
           mem_address <= EX2_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
         -- cant read/write 32 when res >= 0xFF00 - 1 
         elsif ( mem_operI="001" or mem_operI="011" ) and alu_res >= X"FEFF" then
-          EIU_to_EPC  <= SP;
+          EIU_to_EPC  <= PC;
           mem_address <= EX2_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
@@ -86,24 +88,26 @@ begin
      elsif mem_address_mux_sel="01" then
         -- STACK access, push
         
-        -- TODO: check for exceptions
+        -- : check for exceptions
+        -- TODO: FLUSH ALL AFTER EXCEPTION
+        -- TODO: HLT AFTER EXCEPTION
 
         -- STACK EXCEPTIONS
         -- cant read 16 when pointing first place
         if mem_operI="100" and unsigned(SP) = Tp20-1 then
-          EIU_to_EPC  <= SP;
+          EIU_to_EPC  <= PC;
           mem_address <= EX1_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
         -- cant read 32 when pointing first or second place
         elsif mem_operI="101" and unsigned(SP) >= Tp20-2 then
-          EIU_to_EPC  <= SP;
+          EIU_to_EPC  <= PC;
           mem_address <= EX1_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
         -- cant write 32 when pointing first place
         elsif mem_operI="111" and unsigned(SP) >= Tp20-1 then
-          EIU_to_EPC  <= SP;
+          EIU_to_EPC  <= PC;
           mem_address <= EX1_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
