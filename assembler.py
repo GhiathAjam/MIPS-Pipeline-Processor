@@ -58,16 +58,19 @@ mem load -skip 0 -filltype value -filldata 0 -fillradix symbolic /integration/fe
 ''')
 
 for line in file:
-  if len(line) < 2 or line.startswith('#'):
+  if len(line) < 3 or line.startswith('#'):
     continue
 
   
-  wrds = line.strip().replace(',', ' ').replace('(', ' ').replace(')', ' ').split(' ')
+  wrds = line.strip().replace(',', ' ').replace('(', ' ').replace(')', ' ').upper().split(' ')
   # wrds = re.split(', | ', line)
 
   wrds = list(filter(len, wrds))
 
   print(wrds)
+
+  if not len(wrds):
+    continue
 
   # print(line[0:5])
   if wrds[0] == '.ORG':
@@ -280,6 +283,64 @@ for line in file:
     Imm = '0'*(16-len(Imm)) + Imm
     mem[curr] = Imm
 
+
+  ## Branch
+  # jz r1	-> 11000
+  # jn r1	-> 11001
+  # jc r1	-> 11010
+  # jmp r1	-> 11011
+  # call r1 ->	11100
+  # ret	-> 11101
+  # INT index [idx put into 3 bits of Rd]	-> 11110
+  # RTI	-> 11111
+
+  elif wrds[0]=='JZ':
+    mem[curr] = '0110000000000000'
+    # R1
+    r1 = bin(int(wrds[1][1]))[2:]
+    r1 = '0'*(3-len(r1)) + r1
+    mem[curr] = mem[curr][:R1] + r1 + mem[curr][R1+3:]
+
+  elif wrds[0]=='JN':
+    mem[curr] = '0110010000000000'
+    # R1
+    r1 = bin(int(wrds[1][1]))[2:]
+    r1 = '0'*(3-len(r1)) + r1
+    mem[curr] = mem[curr][:R1] + r1 + mem[curr][R1+3:]
+
+  elif wrds[0]=='JC':
+    mem[curr] = '0110100000000000'
+    # R1
+    r1 = bin(int(wrds[1][1]))[2:]
+    r1 = '0'*(3-len(r1)) + r1
+    mem[curr] = mem[curr][:R1] + r1 + mem[curr][R1+3:]
+
+  elif wrds[0]=='JMP':
+    mem[curr] = '0110110000000000'
+    # R1
+    r1 = bin(int(wrds[1][1]))[2:]
+    r1 = '0'*(3-len(r1)) + r1
+    mem[curr] = mem[curr][:R1] + r1 + mem[curr][R1+3:]
+
+  elif wrds[0]=='CALL':
+    mem[curr] = '0111000000000000'
+    # R1
+    r1 = bin(int(wrds[1][1]))[2:]
+    r1 = '0'*(3-len(r1)) + r1
+    mem[curr] = mem[curr][:R1] + r1 + mem[curr][R1+3:]
+
+  elif wrds[0]=='RET':
+    mem[curr] = '0111010000000000'
+
+  elif wrds[0]=='INT':
+    mem[curr] = '0111100000000000'
+    # Rd -> Idx
+    rd = bin(int(wrds[1]))[2:]
+    rd = '0'*(3-len(rd)) + rd
+    mem[curr] = mem[curr][:Rd] + rd + mem[curr][Rd+3:]
+
+  elif wrds[0]=='RTI':
+    mem[curr] = '0111110000000000'
 
 
   ## NUMERIC VALUE

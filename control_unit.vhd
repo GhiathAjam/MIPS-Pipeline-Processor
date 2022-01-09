@@ -119,7 +119,7 @@ begin
         when "11010" =>   -- jc r
           out_vec := "000000000000000000000001100100000";
         when "11011" =>   -- jmp r
-          out_vec := "001100000000000001000010000100000";
+          out_vec := "000000000000000001000010000100000";
         when "11100" =>   -- call r
           out_vec := "001100000000100001000110000111100";
         when "11101" =>   -- ret
@@ -148,10 +148,33 @@ begin
         -- else flush the first two buffers and select the PC
 
         -- check the flags
-        if (flags_to_ctrl(0) = '1' and unsigned(sendPC_exI) = 1) or
-           (flags_to_ctrl(1) = '1' and unsigned(sendPC_exI) = 2) or 
-           (flags_to_ctrl(2) = '1' and unsigned(sendPC_exI) = 3) then
+        if flags_to_ctrl(0) = '1' and unsigned(sendPC_exI) = 1 then
+          -- jump zero -> set ctrl_to_flags(0) to zero
+          ctrl_to_flags(0) <= '0';
+          -- flsh_dec_exec_buf <= '1';
+          out_vec(4) := '1';
+          -- flsh_fetch_dec_buf <= '1';
+          out_vec(3) := '1';
+          -- alu_or_PCn <= '0';
+          out_vec(0) := '0';
+          -- PC_mux_sel <= "01";
+          out_vec(16 to 17) := "01";
+        
+        elsif flags_to_ctrl(1) = '1' and unsigned(sendPC_exI) = 2 then
+          -- jump NEG -> set ctrl_to_flags(1) to zero
+          ctrl_to_flags(1) <= '0';
+          -- flsh_dec_exec_buf <= '1';
+          out_vec(4) := '1';
+          -- flsh_fetch_dec_buf <= '1';
+          out_vec(3) := '1';
+          -- alu_or_PCn <= '0';
+          out_vec(0) := '0';
+          -- PC_mux_sel <= "01";
+          out_vec(16 to 17) := "01";
 
+        elsif flags_to_ctrl(2) = '1' and unsigned(sendPC_exI) = 3 then
+          -- jump zero -> set ctrl_to_flags(2) to zero
+          ctrl_to_flags(2) <= '0';
           -- flsh_dec_exec_buf <= '1';
           out_vec(4) := '1';
           -- flsh_fetch_dec_buf <= '1';

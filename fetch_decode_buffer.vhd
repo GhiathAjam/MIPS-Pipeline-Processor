@@ -22,7 +22,7 @@ BEGIN
 
     wait on clk, rst, flush;
 
-    IF rst = '1' THEN
+    IF rst = '1' OR flush='1' THEN
       PCn_O <= (OTHERS => '0');
       PC_O <= (OTHERS => '0');
       control_bits <= (OTHERS => '0');
@@ -31,7 +31,7 @@ BEGIN
       rt <= (OTHERS => '0');
       offset <= (OTHERS => '0');
     ELSIF falling_edge(clk) THEN
-      WAIT FOR 20 ps;
+      WAIT FOR 35 ps;
 
       IF freeze = '1' THEN
         isFrozen := true;

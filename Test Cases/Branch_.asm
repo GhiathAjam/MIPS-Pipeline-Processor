@@ -29,41 +29,41 @@ OUT R2
 RTI          #POP PC and flags restored
 
 .ORG 10
-IN R1     #R1=30
-IN R2     #R2=50
-IN R3     #R3=100
-IN R4     #R4=300
+LDM R1, 30     #R1=30
+LDM R2, 50     #R2=50
+LDM R3, 100     #R3=100
+LDM R4, 300     #R4=300
 NOP
 NOP
 NOP
 NOP
 NOP
 Push R4   #sp=FFFFFFFE, M[FFFFFFFF]=300
-INT 2     #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
-JMP R1 
+# INT 2     #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
+JMP R1    # jumps to 30
 INC R1	  # this statement shouldn't be executed
  
 #check flag fowarding  
 .ORG 30
 AND R5,R1,R5   #R5=0 , Z = 1
-JZ  R2      #Jump taken, Z = 0
+JZ  R2      #Jump taken, Z = 0 , jumps to 50
 SETC        # this statement shouldn't be executed, C-->1
 
 #check on flag updated on jump
 .ORG 50
 JZ R1      #shouldn't be taken
-JC R3      #Jump Not taken
+JC R3      #Jump Not taken,
 
 #check destination forwarding
 NOT R5     #R5=FFFF, Z= 0, C--> not change, N=1
-INT 0      #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
-IN  R6     #R6=700, flag no change
+# INT 0      #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
+LDM  R6, 700     #R6=700, flag no change
 NOP
 NOP
 NOP
 NOP
 NOP
-JN  R6     #jump taken, N = 0
+JN  R6     # jump taken, N = 0, jumps to 700
 INC R1     # this statement shouldn't be executed
 
 
@@ -76,7 +76,7 @@ NOP
 NOP
 NOP
 NOP
-Call R6    #SP=FFFFFFFD, M[FFFFFFFE]=half next PC,M[FFFFFFFF]=other half next PC
+# Call R6    #SP=FFFFFFFD, M[FFFFFFFE]=half next PC,M[FFFFFFFF]=other half next PC
 INC R6	  #R6=401, this statement shouldn't be executed till call returns, C--> 0, N-->0,Z-->0
 NOP
 NOP
