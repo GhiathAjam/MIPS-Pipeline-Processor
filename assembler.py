@@ -38,6 +38,19 @@ sim:/integration/clk \
 sim:/integration/rst \
 sim:/integration/port_inp \
 sim:/integration/port_outp
+
+add wave -position insertpoint  \
+sim:/integration/decode_stage/registerFile/reg_ram
+add wave -position insertpoint  \
+sim:/integration/fetch/PC/q
+add wave -position insertpoint  \
+sim:/integration/memory/SP/q
+add wave -position insertpoint  \
+sim:/integration/memory/EIU/EPC_to_EIU
+add wave -position insertpoint  \
+sim:/integration/decode_stage/controlUnit/flags_reg/q
+
+
 force -freeze sim:/integration/clk 1 0, 0 {50 ps} -r 100
 force -freeze sim:/integration/rst 1 
 
@@ -51,6 +64,8 @@ for line in file:
   
   wrds = line.strip().replace(',', ' ').replace('(', ' ').replace(')', ' ').split(' ')
   # wrds = re.split(', | ', line)
+
+  wrds = list(filter(len, wrds))
 
   print(wrds)
 
@@ -201,20 +216,69 @@ for line in file:
   # push r2	10000
   # pop rd	10001
   # ldm rd, imm	10010
-  # ld rd, R1+offset	10011
-  # std r2, r1+offset	10100
+  # ldd rd, offset R1	10011
+  # std r2, offset R1	10100
+
+  elif wrds[0]=='PUSH':
+    mem[curr] = '0100000000000000'
+    # R2
+    r2 = bin(int(wrds[1][1]))[2:]
+    r2 = '0'*(3-len(r2)) + r2
+    mem[curr] = mem[curr][:R2] + r2 + mem[curr][R2+3:]
+
+  elif wrds[0]=='POP':
+    mem[curr] = '0100010000000000'
+    # Rd
+    rd = bin(int(wrds[1][1]))[2:]
+    rd = '0'*(3-len(rd)) + rd
+    mem[curr] = mem[curr][:Rd] + rd + mem[curr][Rd+3:]
+
+  elif wrds[0]=='LDM':
+    mem[curr] = '0100100000000001'
+    # Rd
+    rd = bin(int(wrds[1][1]))[2:]
+    rd = '0'*(3-len(rd)) + rd
+    mem[curr] = mem[curr][:Rd] + rd + mem[curr][Rd+3:]
+
+    curr +=1
+    # Imm
+    Imm = bin(int(wrds[2], base=16))[2:]
+    Imm = '0'*(16-len(Imm)) + Imm
+    mem[curr] = Imm
+
+  elif wrds[0]=='LDD':
+    mem[curr] = '0100110000000001'
+    # Rd
+    rd = bin(int(wrds[1][1]))[2:]
+    rd = '0'*(3-len(rd)) + rd
+    mem[curr] = mem[curr][:Rd] + rd + mem[curr][Rd+3:]
+    # R1
+    r1 = bin(int(wrds[3][1]))[2:]
+    r1 = '0'*(3-len(r1)) + r1
+    mem[curr] = mem[curr][:R1] + r1 + mem[curr][R1+3:]
+
+    curr +=1
+    # Imm
+    Imm = bin(int(wrds[2], base=16))[2:]
+    Imm = '0'*(16-len(Imm)) + Imm
+    mem[curr] = Imm
 
   elif wrds[0]=='STD':
-    mem[curr] = '0101000000000000'
+    mem[curr] = '0101000000000001'
     # R2
     r2 = bin(int(wrds[1][1]))[2:]
     r2 = '0'*(3-len(r2)) + r2
     mem[curr] = mem[curr][:R2] + r2 + mem[curr][R2+3:]
     # R1
-    r1 = bin(int(wrds[2][1]))[2:]
+    r1 = bin(int(wrds[3][1]))[2:]
     r1 = '0'*(3-len(r1)) + r1
     mem[curr] = mem[curr][:R1] + r1 + mem[curr][R1+3:]
 
+    curr +=1
+    # Imm
+    Imm = bin(int(wrds[2], base=16))[2:]
+    Imm = '0'*(16-len(Imm)) + Imm
+    mem[curr] = Imm
 
 
 

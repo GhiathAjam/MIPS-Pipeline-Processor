@@ -23,7 +23,10 @@ entity EIU is port(
   -- mem/stack | read/write | 16/32
   mem_operO:    out  std_logic_vector(2 downto 0);
   -- could be alu res or stack pointer or INT or Excep
-  mem_address:  out std_logic_vector(19 downto 0) );
+  mem_address:  out std_logic_vector(19 downto 0);
+  -- EXCEP FLAG
+  Exf:  out std_logic
+  );
 ---
 
 end entity;
@@ -48,6 +51,8 @@ begin
   begin
    
     if rst='1' then
+      -- exc flag
+      ExF <= '0';
       -- send mem[0] & m[1] to pc mux
       -- mem oper = mem read 32
       mem_operO   <= "001";
@@ -55,43 +60,47 @@ begin
       mem_address <= (others => '0');
       -- avoid latch
       sendPC_memO <= sendPC_memI;
- 
+      -- avoid latching on GRABAGE
+      EIU_to_EPC <= EPC_to_EIU;
     elsif rising_edge(clk) then
      if mem_address_mux_sel="10" then
-        -- TODO: handle INT, hint: store a state
-        -- IDX is Rd
+      -- TODO: handle INT, hint: store a state
+      -- IDX is Rd
      elsif mem_address_mux_sel="00" then
-        -- alu res --> data memory access
+      -- alu res --> data memory access
 
-        -- DATA ACCESS EXCEPTIONS
-        -- cant read/write 16 when res > 0xFF00
-        if ( (mem_operI="000" and memEn='1') or mem_operI="010" ) and alu_res >= X"FF00" then
-          EIU_to_EPC  <= PC;
-          mem_address <= EX2_address;
-          mem_operO   <= "001";
-          sendPC_memO <= '1';
-        -- cant read/write 32 when res >= 0xFF00 - 1 
-        elsif ( mem_operI="001" or mem_operI="011" ) and alu_res >= X"FEFF" then
-          EIU_to_EPC  <= PC;
-          mem_address <= EX2_address;
-          mem_operO   <= "001";
-          sendPC_memO <= '1';
-
-        else
-          sendPC_memO <= sendPC_memI;
-          mem_operO   <= mem_operI;
-
-          mem_address(19 downto 16) <= (others=>'0');
-          mem_address(15 downto 0)  <= alu_res;
-        end if;
-
-     elsif mem_address_mux_sel="01" then
+      -- DATA ACCESS EXCEPTIONS
+      -- cant read/write 16 when res > 0xFF00
+      if ( (mem_operI="000" and memEn='1') or mem_operI="010" ) and alu_res >= X"FF00" then
+        EIU_to_EPC  <= PC;
+        mem_address <= EX2_address;
+        mem_operO   <= "001";
+        sendPC_memO <= '1';
+        ExF <= '1';
+      -- cant read/write 32 when res >= 0xFF00 - 1 
+      elsif ( mem_operI="001" or mem_operI="011" ) and alu_res >= X"FEFF" then
+        EIU_to_EPC  <= PC;
+        mem_address <= EX2_address;
+        mem_operO   <= "001";
+        sendPC_memO <= '1';
+        ExF <= '1';
+          
+      else
+        ExF <= '0';
+        sendPC_memO <= sendPC_memI;
+        mem_operO   <= mem_operI;
+    
+        mem_address(19 downto 16) <= (others=>'0');
+        mem_address(15 downto 0)  <= alu_res;
+      end if;
+          
+      elsif mem_address_mux_sel="01" then
         -- STACK access, push
         
         -- : check for exceptions
         -- TODO: FLUSH ALL AFTER EXCEPTION
         -- TODO: HLT AFTER EXCEPTION
-
+        
         -- STACK EXCEPTIONS
         -- cant read 16 when pointing first place
         if mem_operI="100" and unsigned(SP) = Tp20-1 then
@@ -99,41 +108,44 @@ begin
           mem_address <= EX1_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
+          ExF <= '1';
         -- cant read 32 when pointing first or second place
         elsif mem_operI="101" and unsigned(SP) >= Tp20-2 then
           EIU_to_EPC  <= PC;
           mem_address <= EX1_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
+          ExF <= '1';
         -- cant write 32 when pointing first place
         elsif mem_operI="111" and unsigned(SP) >= Tp20-1 then
           EIU_to_EPC  <= PC;
           mem_address <= EX1_address;
           mem_operO   <= "001";
           sendPC_memO <= '1';
+          ExF <= '1';
         
-        -- TODO: handle, TAKE CARE OF INC / DEC -> DONE
+        -- : handle, TAKE CARE OF INC / DEC -> DONE
         
         -- stack read 16
         elsif mem_operI="100" then
-          mem_address <= SP(19 downto 0);
-          mem_operO   <= mem_operI;
+          mem_address <= std_logic_vector( unsigned(SP(19 downto 0)) + to_unsigned(1, 20) );
+          mem_operO   <= "000";
           sendPC_memO <= sendPC_memI;
         -- stack read 32
         elsif mem_operI="101" then
-          mem_address <= std_logic_vector(unsigned(SP(19 downto 0)) - 1);
-          mem_operO   <= mem_operI;
+          mem_address <= std_logic_vector( unsigned(SP(19 downto 0)) + to_unsigned(1, 20) );
+          mem_operO   <= "001";
           sendPC_memO <= sendPC_memI;
 
         -- stack write 16
         elsif mem_operI="110" then
-          mem_address <= std_logic_vector(unsigned(SP(19 downto 0)) + 1);
-          mem_operO   <= mem_operI;
+          mem_address <= SP(19 downto 0);
+          mem_operO   <= "010";
           sendPC_memO <= sendPC_memI;
         -- stack write 32
-        else
-          mem_address <= std_logic_vector(unsigned(SP(19 downto 0)) + 1);
-          mem_operO   <= mem_operI;
+        elsif mem_operI="111" then
+          mem_address <= SP(19 downto 0);
+          mem_operO   <= "011";
           sendPC_memO <= sendPC_memI;
         end if;
 

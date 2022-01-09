@@ -33,7 +33,7 @@ port(
 --------------------------------------------------------------
   PCnI, PCI:  in  std_logic_vector(31 downto 0);
 --------------------------------------------------------------
-  memEnI:   in std_logic;
+  memEnI, flsh:   in std_logic;
 --------------------------------------------------------------
 --------------------------------------------------------------
   -- outputs concerning the reg file
@@ -72,13 +72,13 @@ constant SIGNALS_BITS:  integer := 49 +32 +32 +1;
 begin
 
 
-process (clk, rst) is
+process (clk, rst, flsh) is
 
   variable out_vec:    std_logic_vector(0 to SIGNALS_BITS-1);
 
   begin
 
-    if rst = '1' then
+    if rst = '1' or flsh='1' then
       out_vec := (others => '0');  
     elsif (falling_edge(clk)) then
       out_vec(0 to 6) := (flags_bakO_I, flags_restoreO_I,

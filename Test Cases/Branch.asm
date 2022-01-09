@@ -52,13 +52,13 @@ JC R3      #Jump Not taken
 #check destination forwarding
 NOT R5     #R5=FFFF, Z= 0, C--> not change, N=1
 INT 0      #SP=FFFFFFFC, M[FFFFFFFD]=half next PC,M[FFFFFFFE]=other half next PC
-IN  R6     #R6=200, flag no change
+IN  R6     #R6=700, flag no change
 JN  R6     #jump taken, N = 0
 INC R1     # this statement shouldn't be executed
 
 
 #check on load use
-.ORG 200
+.ORG 700
 SETC      #C-->1
 POP R6     #R6=300, SP=FFFFFFFF
 Call R6    #SP=FFFFFFFD, M[FFFFFFFE]=half next PC,M[FFFFFFFF]=other half next PC

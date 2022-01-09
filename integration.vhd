@@ -29,7 +29,7 @@ is
     flags_bak_o_d, flags_restore_o_d, set_carry_o_d,
     reg_write_back_o_d, mem_input_mux_sel_o_d,
     alu_mux_sel_o_d, port_read_o_d, port_write_o_d, alu_PCn_o_d,
-    memEn_o_d  : std_logic;
+    memEn_o_d, flsh_exec_mem_buf_o_d  : std_logic;
 
     signal PC_mux_sel_o_d, write_back_mux_sel_o_d,
     mem_address_mux_sel_o_d: std_logic_vector(1 downto 0);
@@ -84,6 +84,8 @@ is
     signal wb_data_o_m: std_logic_vector(15 downto 0);
     signal mem_res32_o_m: std_logic_vector(31 downto 0);
 
+    signal Exf_o_m: std_logic;
+
 -- declare signals from memory_writeback_buffer
     signal regW_o_w_b: std_logic;
     signal rd_o_w_b: std_logic_vector(2 downto 0);
@@ -130,7 +132,7 @@ begin
     mem_address_mux_sel_o_d,
 
     alu_oper_o_d, sendPC_ex_o_d, mem_oper_o_d,
-    memEn_o_d); 
+    memEn_o_d, flsh_exec_mem_buf_o_d); 
     
 
   --
@@ -168,7 +170,7 @@ begin
 
 
   --
-  -- EXCUTE
+  -- EXECUTE
   --
   execute_stage:                 entity work.execute_stage  
   port map(
@@ -196,7 +198,7 @@ begin
     mem_address_mux_sel_o_d_b,
     mem_oper_o_d_b, alu_res_o_e,
     PCn_o_d_b, PC_o_d_b,
-    memEn_o_d_b,
+    memEn_o_d_b, flsh_exec_mem_buf_o_d,
   -- OUTPUS
     d2_o_e_b, rd_o_e_b,
     flags_bakI_d, flags_restI_d,
@@ -235,7 +237,8 @@ begin
   -- OUTPUTS
     sendPC_memI_d,
 
-    wb_data_o_m, port_outp, mem_res32_o_m ); 
+    wb_data_o_m, port_outp, mem_res32_o_m,
+    Exf_o_m ); 
 
 
   --
@@ -247,6 +250,7 @@ begin
     rst, clk,
     reg_write_back_o_e_b,
     rd_o_e_b, wb_data_o_m,
+    Exf_o_m,
   -- OUTPUTS
     regW_o_w_b,
     rd_o_w_b, datain_o_w_b );  

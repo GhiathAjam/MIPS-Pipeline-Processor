@@ -11,13 +11,19 @@ end;
 
 architecture arc_reg_stack of reg_stack is
 begin
-    process (clk, rst)
+    process is
     begin
+
+        wait on clk, rst;
+        
         if (rst = '1') then
-            -- 2^20 -1
-            q <= std_logic_vector(to_unsigned(1048575, 32));
+        -- 2^20 -1
+        q <= std_logic_vector(to_unsigned(1048575, 32));
 
         elsif falling_edge(clk) then
+            
+            wait for 25 ps;
+
             q <= d;
         end if;
     end process;

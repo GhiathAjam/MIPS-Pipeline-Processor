@@ -39,7 +39,10 @@ entity memory is port(
   -- port output
   outer_port_outp:  out std_logic_vector(15 downto 0);
   -- mem res to PC 
-  mem_res32:  out std_logic_vector(31 downto 0) );
+  mem_res32:  out std_logic_vector(31 downto 0);
+  -- exc flg
+  Exf:  out std_logic
+  );
 ---
 
 end entity;
@@ -64,6 +67,10 @@ signal mem_to_SP, SP_to_mem:  std_logic_vector(31 downto 0);
 type ram_type is array(0 TO 1048576) of std_logic_vector(15 downto 0);
 signal mem_arr:     ram_type;
 
+signal mem_mux : std_logic_vector(31 downto 0);
+
+signal Exf_t:  std_logic;
+
 begin
 
   -- UPDATES on Falling edge
@@ -82,8 +89,8 @@ begin
     mem_operO=>mem_operO,
     mem_address_mux_sel=>mem_address_mux_sel,
     mem_address=>mem_address,
-    memEn=>memEn
-    );
+    memEn=>memEn,
+    Exf=>Exf_t);
 
   PRT: entity work.PRT port map (
     clk=>clk,
@@ -95,32 +102,48 @@ begin
     port_read=>port_read,
     port_write=>port_write);
 
+
+  Exf <= Exf_t;
+
+  mem_mux   <= "0000000000000000" & data2    when mem_input_mux_sel='0'
+        else   PCN;
+
   mem_res   <= mem_arr(to_integer(unsigned(mem_address)));
   mem_res32 <= mem_arr(to_integer(unsigned(mem_address)+1)) & mem_arr(to_integer(unsigned(mem_address)));
 
-  process(clk) 
+  process(clk, rst) 
     begin
-      if falling_edge(clk) then
+      if rst='1' or Exf_t='1' then
+        mem_to_SP <= SP_to_mem;
+
+      elsif falling_edge(clk) then
 
         -- UPDATING STACK POINTER
         -- SP will accept on next rising edge
-        if mem_address_mux_sel="01" then
-          -- stack read 16
-          if mem_operI="100" then
-            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) + 1);
-          -- stack read 32
-          elsif mem_operI="101" then
-            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) + 2);
-          -- stack write 16
-          elsif mem_operI="110" then
-            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) - 1);
-          -- stack write 32
-          elsif mem_operI="111" then
-            mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) - 2);
-          end if;
+        -- stack read 16
+        if mem_operI="100" then
+          mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) + 1);
+        -- stack read 32
+        elsif mem_operI="101" then
+          mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) + 2);
+        -- stack write 16
+        elsif mem_operI="110" then
+          mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) - 1);
+        -- stack write 32
+        elsif mem_operI="111" then
+          mem_to_SP <= std_logic_vector(unsigned(SP_to_mem) - 2);
         end if;
 
-        -- TODO: Writing data to address, if mem_write
+        -- : Writing data to address, if mem_write
+        -- mem write 16:
+        if mem_operO="010" then
+          mem_arr(to_integer(unsigned(mem_address))) <= mem_mux(15 downto 0);
+        -- mem write 32
+        elsif mem_operO="011" then
+          mem_arr(to_integer(unsigned(mem_address))) <= mem_mux(15 downto 0);
+          mem_arr(to_integer(unsigned(mem_address)+1)) <= mem_mux(31 downto 16);
+        end if;
+
       end if;
     end process;
 

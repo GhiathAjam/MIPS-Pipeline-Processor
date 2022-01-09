@@ -41,7 +41,7 @@ entity control_unit is port(
   -- mem/stack | read/write | 16/32
   mem_oper:  out  std_logic_vector(2 downto 0);
   -- to make the fetch stage select between PCn and alu_res	
-  alu_or_PCn, memEn : out std_logic );
+  alu_or_PCn, memEn, flsh_exec_mem_buf : out std_logic );
 ---
 
 end entity;
@@ -54,7 +54,7 @@ architecture arc_control_unit of control_unit is
 signal ctrl_to_flags, flags_to_ctrl:      std_logic_vector(2 downto 0);
 signal ctrl_to_flags_b, flags_b_to_ctrl:  std_logic_vector(2 downto 0);
 
-constant SIGNALS_BITS:  integer := 32;
+constant SIGNALS_BITS:  integer := 33;
 -- signal out_vec:	
 
 begin
@@ -70,7 +70,9 @@ begin
   
     if rst='1'  then
       -- Sel PC from mem
-      out_vec := "00000000000000001000000000000000";
+      out_vec := "000000000000000010000000000000000";
+      ctrl_to_flags <= flags_to_ctrl;
+      ctrl_to_flags_b <= flags_b_to_ctrl;
       -- PC_mux_sel <= "00";
     elsif rising_edge(clk) then
 
@@ -79,57 +81,59 @@ begin
         when "00000" =>  -- NOP
           out_vec :=  (others => '0');
         when "00001" =>   -- HLT
-          out_vec := "00110000000000000000000000000000";
+          out_vec := "001100000000000000000000000000000";
         when "00010" =>   -- SETC
-          out_vec := "00000000001000000000000000000000";
+          out_vec := "000000000010000000000000000000000";
         when "00011" =>   -- NOT Rdst
-          out_vec := "00000010000100000001000001010000";
+          out_vec := "000000100001000000010000010100000";
         when "00100" =>   -- INC Rdst
-          out_vec := "00000011000100000001000001100000";
+          out_vec := "000000110001000000010000011000000";
         when "00101" =>   -- OUT Rdst
-          out_vec := "00000000000000010000000000000000";
+          out_vec := "000000000000000100000000000000000";
         when "00110" =>   -- IN Rdst
-          out_vec := "00000000000100100010000000000000";
+          out_vec := "000000000001001000100000000000000";
         when "01000" =>   -- Mov R, R
-          out_vec := "00000000000100000001000000010000";
+          out_vec := "000000000001000000010000000100000";
         when "01001" =>   -- Add R, R, R
-          out_vec := "00000011000101000001000001000000";
+          out_vec := "000000110001010000010000010000000";
         when "01010" =>   -- SUB R, R, R
-          out_vec := "00000011000101000001000000110000";
+          out_vec := "000000110001010000010000001100000";
         when "01011" =>   -- AND R, R, R
-          out_vec := "00000010000101000001000000000000";
+          out_vec := "000000100001010000010000000000000";
         when "01100" =>   -- iadd, r, r, imm
-          out_vec := "00000011000100000001000001000000";
+          out_vec := "000000110001000000010000010000000";
         when "10000" =>   -- push r
-          out_vec := "00000000000000000000010000011100";
+          out_vec := "000000000000000000000100000111000";
         when "10001" =>   -- pop r
-          out_vec := "00000000000100000000010000001000";
+          out_vec := "000000000001000000000100000010000";
         when "10010" =>   -- ldm r, imm
-          out_vec := "00000000000100000001000000100000";
+          out_vec := "000000000001000000010000001000000";
         when "10011" =>   -- ld r, R+offset
-          out_vec := "00000000000100000000000001000001";
+          out_vec := "000000000001000000000000010000010";
         when "10100" =>   -- std rs1, rs2+offset
-          out_vec := "00000000000000000000000001000101";
+          out_vec := "000000000000000000000000010001010";
         when "11000" =>   -- jz r
-          out_vec := "00000000000000000000000010010000";
+          out_vec := "000000000000000000000000100100000";
         when "11001" =>   -- jn r
-          out_vec := "00000000000000000000000100010000";
+          out_vec := "000000000000000000000001000100000";
         when "11010" =>   -- jc r
-          out_vec := "00000000000000000000000110010000";
+          out_vec := "000000000000000000000001100100000";
         when "11011" =>   -- jmp r
-          out_vec := "00110000000000000100001000010000";
+          out_vec := "001100000000000001000010000100000";
         when "11100" =>   -- call r
-          out_vec := "00110000000010000100011000011110";
+          out_vec := "001100000000100001000110000111100";
         when "11101" =>   -- ret
-          out_vec := "01110000000000001000010000001010";
+          out_vec := "011100000000000010000100000010100";
         when "11110" =>   -- INT index
-          out_vec := "00110000100010001000100000100000";
+          out_vec := "001100001000100010001000001000000";
         when "11111" =>   -- ret int
-          out_vec := "01110000010000001000010000001010";
+          out_vec := "011100000100000010000100000010100";
         when others =>
           out_vec := (others => '0');
       end case;
       
+    -- FALLING EDGE STUFF, PC STUFF!
+    elsif falling_edge(clk) then
       if unsigned(sendPC_exI)=4 then
         -- : unfreeze + sel PC 
         -- unfrez_fetch_dec_buf -> 5
@@ -166,7 +170,12 @@ begin
         out_vec(5) := '1';
         -- PC_mux_sel <= "10";
         out_vec(16 to 17) := "10";
-        end if;
+        -- flush decode execute 
+        out_vec(4) := '1';
+        -- flush exec mem
+        out_vec(32) := '1';
+      end if;
+      
       if zero_neg_flag_enI='1' then
         ctrl_to_flags(0) <= alu_zero_flag;
         ctrl_to_flags(1) <= alu_neg_flag;
@@ -210,6 +219,7 @@ begin
     mem_oper               <= out_vec(28 to 30);
     
     memEn     <=  out_vec(31);
+    flsh_exec_mem_buf <= out_vec(32);
 
   end process;
 end architecture;

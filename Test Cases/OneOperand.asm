@@ -27,30 +27,15 @@ NOP            #No change
 NOP            #No change
 NOP            #No change
 INC R1	       #R1 =0000 , C --> 1 , N --> 0 , Z --> 1
+IN R1	         #R1= 0x5,add 5 on the in port,flags no change	
+IN R2          #R2= 0x10,add 10 on the in port, flags no change
 NOP            #No change
 NOP            #No change
 NOP            #No change
 NOP            #No change
 NOP            #No change
-IN R1	       #R1= 5,add 5 on the in port,flags no change	
-NOP            #No change
-NOP            #No change
-NOP            #No change
-NOP            #No change
-NOP            #No change
-IN R2          #R2= 10,add 10 on the in port, flags no change
-NOP            #No change
-NOP            #No change
-NOP            #No change
-NOP            #No change
-NOP            #No change
-NOT R2	       #R2= FFF5, C--> no change, N -->1,Z-->0
-NOP            #No change
-NOP            #No change
-NOP            #No change
-NOP            #No change
-NOP            #No change
-INC R1         #R1= 6, C --> 0, N -->0, Z-->0
+NOT R2	       #R2= FFEF, C--> no change, N -->1,Z-->0
+INC R1         #R1= 0x6, C --> 0, N -->0, Z-->0
 NOP            #No change
 NOP            #No change
 NOP            #No change

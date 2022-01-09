@@ -20,7 +20,7 @@ BEGIN
     VARIABLE isFrozen : BOOLEAN := false; -- Variable Not Signal to update Immediatly not at the end of process
   BEGIN
 
-    wait on clk, rst;
+    wait on clk, rst, flush;
 
     IF rst = '1' THEN
       PCn_O <= (OTHERS => '0');
@@ -32,16 +32,6 @@ BEGIN
       offset <= (OTHERS => '0');
     ELSIF falling_edge(clk) THEN
       WAIT FOR 20 ps;
-
-      IF flush = '1' THEN
-        PCn_O <= (OTHERS => '0');
-        PC_O <= (OTHERS => '0');
-        control_bits <= (OTHERS => '0');
-        rd <= (OTHERS => '0');
-        rs <= (OTHERS => '0');
-        rt <= (OTHERS => '0');
-        offset <= (OTHERS => '0');
-      END IF;
 
       IF freeze = '1' THEN
         isFrozen := true;

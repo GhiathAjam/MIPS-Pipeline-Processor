@@ -13,6 +13,7 @@ entity memory_writeback_buffer is port(
   reg_write_backI:  in  std_logic;
   rdI:              in  std_logic_vector(2 downto 0);
   wb_dataI:         in  std_logic_vector(15 downto 0);
+  ExF:              in  std_logic;
 ---
 -- output
   reg_write_backO:  out std_logic;
@@ -28,7 +29,7 @@ architecture arc_memory_writeback_buffer of memory_writeback_buffer is
 begin
   process(rst, clk)
   begin
-    if rst='1' then
+    if rst='1' or Exf='1' then
       rdO <= "000";
       reg_write_backO <= '0';
       wb_dataO <= (others => '0');
