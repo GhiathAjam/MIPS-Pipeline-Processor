@@ -52,3 +52,27 @@ JMP  Rdst
 
  - Data forwarding is missing
  - Two types of Exceptions are implemented (one related to stack memory and the other to data memory)
+
+## Contributors
+<table>
+  <tr>
+    <td align="center">
+    <a href="https://github.com/GhiathAjam" target="_black">
+    <img src="https://avatars.githubusercontent.com/u/43111805?v=4" width="150px;" alt="Gheiath Ajam"/>
+    <br />
+    <sub><b>Gheiath Ajam</b></sub></a>
+    </td>
+    <td align="center">
+    <a href="https://github.com/ahmedsayed2000" target="_black">
+    <img src="https://avatars.githubusercontent.com/u/60502276?v=4" width="150px;" alt="Ahmed Sayed"/>
+    <br />
+    <sub><b>Ahmed Sayed</b></sub></a>
+    </td>
+    <td align="center">
+    <a href="https://github.com/YousefElshabrawy" target="_black">
+    <img src="https://avatars.githubusercontent.com/u/62210671?v=4" width="150px;" alt="Yousef El Shabrawy"/>
+    <br />
+    <sub><b>Yousef El Shabrawy</b></sub></a>
+    </td>
+  </tr>
+ </table>
